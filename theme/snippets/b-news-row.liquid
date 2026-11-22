@@ -7,7 +7,7 @@
 {%- assign pastel = index | default: 0 | modulo: 6 | plus: 1 -%}
 <a href="{{ article.url }}" class="b-news-row{% if show_image %} b-news-row--image{% endif %}">
   {%- if show_image -%}
-    <span class="b-news-row__thumb" style="--ph-bg: var(--brand-pastel-{{ pastel }});">
+    <span class="b-news-row__thumb{% if article.image %} b-news-row__thumb--image{% endif %}" style="--ph-bg: var(--brand-pastel-{{ pastel }});">
       {%- if article.image -%}
         {{
           article.image
