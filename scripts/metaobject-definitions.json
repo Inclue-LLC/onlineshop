@@ -178,15 +178,16 @@
         },
         {
           "key": "role",
-          "name": "区分",
+          "name": "区分（任意）",
           "type": "single_line_text_field",
-          "required": true,
+          "required": false,
           "validations": [
             {
               "name": "choices",
               "value": "[\"メイン\",\"サブ\"]"
             }
-          ]
+          ],
+          "description": "メイン／サブを分けて表示する場合のみ使用（テーマの「並べ方」が「メイン＋サブ」のとき）。"
         },
         {
           "key": "illustration",

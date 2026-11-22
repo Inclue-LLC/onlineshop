@@ -6,10 +6,15 @@
  * クラス名は Dawn と衝突しないよう b- で始める。1rem = 10px（Dawn の基準）。
  */
 
-:root {
+/* 色は配色（color-scheme-N）ごとに計算し直す */
+:root,
+[class*='color-scheme-'] {
   --b-accent: rgb(var(--color-button));
   --b-text: rgb(var(--color-foreground));
   --b-muted: rgba(var(--color-foreground), 0.68);
+}
+
+:root {
   --b-gutter: 2rem;
   --b-radius-lg: calc(var(--brand-radius) + 8px);
 }
@@ -1205,6 +1210,84 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
   width: 100%;
   height: auto;
   border-radius: var(--brand-radius);
+}
+
+/* キャラクターカード（すべて同じ大きさで並べる） */
+.b-chara-card__link {
+  display: block;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.b-chara-card__media {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  background: var(--ph-bg, var(--brand-pastel-1));
+  overflow: hidden;
+}
+
+.b-chara-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.4s;
+}
+
+.b-chara-card__link:hover .b-chara-card__media img {
+  transform: scale(1.04);
+}
+
+.b-chara-card__body {
+  padding: 2rem 2.4rem 2.4rem;
+  text-align: center;
+}
+
+.b-chara-card__name {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: var(--brand-heading-weight);
+}
+
+.b-chara-card__link:hover .b-chara-card__name {
+  color: var(--b-accent);
+}
+
+.b-chara-card__en {
+  margin: 0.2rem 0 0;
+  font-size: 1.2rem;
+  color: var(--b-muted);
+}
+
+.b-chara-card__text {
+  margin: 0.8rem 0 0;
+  font-size: 1.4rem;
+  color: var(--b-muted);
+}
+
+@media screen and (max-width: 749px) {
+  .b-characters {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .b-chara-card__body {
+    padding: 1.2rem 0.8rem 1.4rem;
+  }
+  .b-chara-card__name {
+    font-size: 1.4rem;
+  }
+  .b-chara-card__en,
+  .b-chara-card__text {
+    display: none;
+  }
+}
+
+/* プロフィールの左右を入れ替える */
+@media screen and (min-width: 750px) {
+  .b-split--reverse .b-split__media {
+    order: 2;
+  }
 }
 
 /* ---------- About ---------- */

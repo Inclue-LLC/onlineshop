@@ -36,7 +36,7 @@ const Q_BY_TYPE = `#graphql
       name
       access { storefront }
       capabilities { publishable { enabled } }
-      fieldDefinitions { key name type { name } }
+      fieldDefinitions { key name required type { name } }
     }
   }`;
 
@@ -97,6 +97,11 @@ async function createDefinition(gql, def, log) {
 async function updateDefinition(gql, def, existing, log) {
   const existingKeys = new Set(existing.fieldDefinitions.map((f) => f.key));
   const missing = def.fieldDefinitions.filter((f) => !existingKeys.has(f.key));
+  // 定義で必須を外した項目は、ストア側の必須も外す（必須にする方向は既存データがあるため自動では変えない）
+  const loosen = def.fieldDefinitions.filter((f) => {
+    const cur = existing.fieldDefinitions.find((e) => e.key === f.key);
+    return cur && cur.required && !f.required;
+  });
   const needsAccess = existing.access?.storefront !== 'PUBLIC_READ';
   const needsPublishable = !existing.capabilities?.publishable?.enabled;
 
@@ -108,12 +113,13 @@ async function updateDefinition(gql, def, existing, log) {
     }
   }
 
-  if (!missing.length && !needsAccess && !needsPublishable) {
+  if (!missing.length && !loosen.length && !needsAccess && !needsPublishable) {
     log(`  = 変更なし: ${def.type}`);
     return;
   }
   const describe = [
     missing.length ? `フィールド追加: ${missing.map((f) => f.key).join(', ')}` : '',
+    loosen.length ? `必須を解除: ${loosen.map((f) => f.key).join(', ')}` : '',
     needsAccess ? 'ストアフロント読み取りを有効化' : '',
     needsPublishable ? '公開ステータスを有効化' : '',
   ].filter(Boolean);
@@ -123,7 +129,12 @@ async function updateDefinition(gql, def, existing, log) {
   }
 
   const build = (useFallback) => {
-    const definition = { fieldDefinitions: missing.map((f) => ({ create: toFieldInput(f, useFallback) })) };
+    const definition = {
+      fieldDefinitions: [
+        ...missing.map((f) => ({ create: toFieldInput(f, useFallback) })),
+        ...loosen.map((f) => ({ update: { key: f.key, name: f.name, description: f.description, required: false } })),
+      ],
+    };
     if (needsAccess) definition.access = { storefront: 'PUBLIC_READ' };
     if (needsPublishable) definition.capabilities = { publishable: { enabled: true } };
     return definition;

@@ -1,15 +1,27 @@
 {%- capture character_keys -%}{%- render 'character-sorted-keys' -%}{%- endcapture -%}
 {%- assign character_keys = character_keys | strip | split: ',' | sort -%}
+{%- liquid
+  assign profile_all = true
+  if section.settings.layout == 'main_sub'
+    assign profile_all = false
+  endif
+-%}
 <section class="b-section b-section--top-none b-character-profiles">
   <div class="b-container">
     {%- assign main_count = 0 -%}
     {%- for key in character_keys -%}
       {%- assign key_parts = key | split: '|' -%}
-      {%- if key_parts[1] != 'main' -%}{%- continue -%}{%- endif -%}
-      {%- assign main_count = main_count | plus: 1 -%}
+      {%- if profile_all == false and key_parts[1] != 'main' -%}{%- continue -%}{%- endif -%}
       {%- assign character = shop.metaobjects.character[key_parts[2]] -%}
-      <article class="b-card b-split b-split--profile" id="character-{{ character.system.handle }}">
-        <div class="b-split__media" style="--ph-bg: {% if character.theme_color != blank %}{{ character.theme_color.value }}{% else %}var(--brand-pastel-1){% endif %};">
+      {%- unless character -%}{%- continue -%}{%- endunless -%}
+      {%- assign main_count = main_count | plus: 1 -%}
+      {%- assign pastel = main_count | minus: 1 | modulo: 6 | plus: 1 -%}
+      {%- assign is_even = main_count | modulo: 2 -%}
+      <article
+        class="b-card b-split b-split--profile{% if profile_all and is_even == 0 %} b-split--reverse{% endif %}"
+        id="character-{{ character.system.handle }}"
+      >
+        <div class="b-split__media" style="--ph-bg: {% if character.theme_color != blank %}{{ character.theme_color.value }}{% else %}var(--brand-pastel-{{ pastel }}){% endif %};">
           {%- if character.illustration.value != blank -%}
             {{
               character.illustration.value
@@ -17,11 +29,11 @@
               | image_tag: loading: 'eager', widths: '500, 800, 1100, 1400', sizes: '(min-width: 990px) 600px, 100vw', alt: character.name.value
             }}
           {%- else -%}
-            <span class="b-ph__label">メインキャラクター 全身イラスト</span>
+            <span class="b-ph__label">全身イラスト</span>
           {%- endif -%}
         </div>
         <div class="b-split__body">
-          <span class="b-badge b-badge--soft">メインキャラクター</span>
+          {%- unless profile_all -%}<span class="b-badge b-badge--soft">メインキャラクター</span>{%- endunless -%}
           <h2 class="b-split__title b-split__title--large">{{ character.name.value | escape }}</h2>
           {%- if character.name_en != blank -%}<p class="b-split__en">{{ character.name_en.value | escape }}</p>{%- endif -%}
           {%- if character.description != blank -%}
@@ -36,11 +48,10 @@
     {%- endfor -%}
     {%- if main_count == 0 and request.design_mode -%}
       <div class="b-card b-split b-split--profile">
-        <div class="b-split__media" style="--ph-bg: var(--brand-pastel-1);"><span class="b-ph__label">メインキャラクター 全身イラスト</span></div>
+        <div class="b-split__media" style="--ph-bg: var(--brand-pastel-1);"><span class="b-ph__label">全身イラスト</span></div>
         <div class="b-split__body">
-          <span class="b-badge b-badge--soft">メインキャラクター</span>
           <h2 class="b-split__title b-split__title--large">[キャラクター名]</h2>
-          <p class="b-split__text">メタオブジェクト「キャラクター」で区分「メイン」のキャラクターを登録すると表示されます。</p>
+          <p class="b-split__text">メタオブジェクト「キャラクター」を登録すると表示されます。</p>
         </div>
       </div>
     {%- endif -%}
@@ -54,7 +65,7 @@
         endif
       endfor
     -%}
-    {%- if sub_count > 0 -%}
+    {%- if sub_count > 0 and profile_all == false -%}
       <h2 class="b-title b-title--section">{{ section.settings.sub_heading | escape }}</h2>
       <div class="b-grid b-grid--4 b-grid--sp-2">
         {%- assign index = 0 -%}
@@ -112,7 +123,17 @@
   "name": "キャラクタープロフィール",
   "tag": "div",
   "settings": [
-    { "type": "paragraph", "content": "メタオブジェクト「キャラクター」の内容を表示します。区分「メイン」は大きなプロフィール、「サブ」は「なかまたち」に表示順で並びます。" },
+    { "type": "paragraph", "content": "メタオブジェクト「キャラクター」の内容を表示順に表示します。" },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "並べ方",
+      "default": "equal",
+      "options": [
+        { "value": "equal", "label": "全員を同じ大きさのプロフィールで並べる" },
+        { "value": "main_sub", "label": "メイン（大きなプロフィール）＋サブ（なかまたち）" }
+      ]
+    },
     { "type": "text", "id": "goods_label", "label": "グッズボタンの文字", "default": "このキャラクターのグッズを見る" },
     { "type": "text", "id": "sub_heading", "label": "サブキャラクターの見出し", "default": "なかまたち" },
     { "type": "text", "id": "relation_heading", "label": "相関図の見出し", "default": "キャラクター相関図" },

@@ -2,7 +2,7 @@
   assign source = section.settings.collection
   assign more_url = section.settings.more_url | default: source.url | default: routes.all_products_collection_url
 -%}
-<section class="b-section b-product-showcase color-{{ section.settings.color_scheme }} gradient">
+<section class="b-section b-product-showcase">
   <div class="b-container">
     {%- render 'b-section-head',
       heading: section.settings.heading,
@@ -41,8 +41,7 @@
     { "type": "text", "id": "new_tag", "label": "NEW バッジを付けるタグ", "default": "NEW" },
     { "type": "text", "id": "tax_label", "label": "価格の後ろの表記", "default": "（税込）" },
     { "type": "text", "id": "more_label", "label": "右上リンクの文字", "default": "すべての商品を見る" },
-    { "type": "url", "id": "more_url", "label": "右上リンクのリンク先", "info": "未設定の場合はコレクションのページ" },
-    { "type": "color_scheme", "id": "color_scheme", "label": "配色", "default": "scheme-2" }
+    { "type": "url", "id": "more_url", "label": "右上リンクのリンク先", "info": "未設定の場合はコレクションのページ" }
   ],
   "presets": [{ "name": "オンラインショップ" }]
 }
