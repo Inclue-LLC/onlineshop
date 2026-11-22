@@ -24,7 +24,7 @@
     },
     "news": {
       "type": "news-list",
-      "settings": { "heading": "お知らせ", "subheading": "NEWS", "blog": "news", "limit": 3, "show_image": false, "more_label": "お知らせ一覧", "more_url": "" }
+      "settings": { "heading": "お知らせ", "subheading": "NEWS", "blog": "news", "limit": 3, "show_image": true, "more_label": "お知らせ一覧", "more_url": "" }
     },
     "shop": {
       "type": "product-showcase",
