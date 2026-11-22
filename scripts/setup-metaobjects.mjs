@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * メタオブジェクト定義（POP UP／店舗／キャラクター）を各ストアに作成する。
+ * メタオブジェクト定義（POP UP／店舗／キャラクター）と、
+ * ブログ記事のメタフィールド定義（お知らせのサムネイル調整用）を各ストアに作成する。
  *
  *   node scripts/setup-metaobjects.mjs              # .env の STORES 全部
  *   node scripts/setup-metaobjects.mjs hanul        # 指定ストアのみ
@@ -12,6 +13,7 @@
  *   下書き／公開を切り替えられるよう publishable を有効にする
  * - 必要な権限（アプリのスコープ）: read_metaobject_definitions, write_metaobject_definitions,
  *   read_metaobjects, write_metaobjects
+ *   （記事メタフィールドの作成で権限エラーになる場合は read_content, write_content も追加）
  */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -24,7 +26,7 @@ const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
 const storeArgs = args.filter((a) => !a.startsWith('--'));
 
-const { definitions } = JSON.parse(readFileSync(resolve(ROOT, 'scripts/metaobject-definitions.json'), 'utf8'));
+const { definitions, articleMetafields } = JSON.parse(readFileSync(resolve(ROOT, 'scripts/metaobject-definitions.json'), 'utf8'));
 
 const Q_BY_TYPE = `#graphql
   query DefinitionByType($type: String!) {
@@ -138,6 +140,57 @@ async function updateDefinition(gql, def, existing, log) {
   log(`  ~ 更新しました: ${def.type}（${describe.join(' / ')}）`);
 }
 
+const Q_METAFIELD_DEFS = `#graphql
+  query ArticleMetafieldDefinitions($namespace: String!) {
+    metafieldDefinitions(first: 100, ownerType: ARTICLE, namespace: $namespace) {
+      nodes { key type { name } }
+    }
+  }`;
+
+const M_METAFIELD_CREATE = `#graphql
+  mutation CreateMetafieldDefinition($definition: MetafieldDefinitionInput!) {
+    metafieldDefinitionCreate(definition: $definition) {
+      createdDefinition { id key }
+      userErrors { field message code }
+    }
+  }`;
+
+/** ブログ記事のメタフィールド定義（サムネイル調整用）を、足りないものだけ作成する */
+async function setupArticleMetafields(gql, log) {
+  if (!articleMetafields?.fields?.length) return;
+  const { namespace, fields } = articleMetafields;
+  const data = await gql(Q_METAFIELD_DEFS, { namespace });
+  const existing = new Map(data.metafieldDefinitions.nodes.map((n) => [n.key, n.type.name]));
+  for (const f of fields) {
+    if (existing.has(f.key)) {
+      if (existing.get(f.key) !== f.type) {
+        log(`  ! 記事メタフィールド ${namespace}.${f.key} の型が異なります（ストア: ${existing.get(f.key)} / 定義: ${f.type}）`);
+      } else {
+        log(`  = 変更なし: 記事メタフィールド ${namespace}.${f.key}`);
+      }
+      continue;
+    }
+    if (dryRun) {
+      log(`  + 作成予定: 記事メタフィールド ${namespace}.${f.key}（${f.name}）`);
+      continue;
+    }
+    const definition = {
+      ownerType: 'ARTICLE',
+      namespace,
+      key: f.key,
+      name: f.name,
+      type: f.type,
+      description: f.description,
+      access: { storefront: 'PUBLIC_READ' },
+    };
+    if (f.validations?.length) definition.validations = f.validations;
+    const res = await gql(M_METAFIELD_CREATE, { definition });
+    const errors = res.metafieldDefinitionCreate.userErrors;
+    if (errors.length) throw new Error(`記事メタフィールド ${namespace}.${f.key} の作成に失敗: ${JSON.stringify(errors)}`);
+    log(`  + 作成しました: 記事メタフィールド ${namespace}.${f.key}（${f.name}）`);
+  }
+}
+
 async function run(cfg) {
   const log = (msg) => console.log(msg);
   log(`\n■ ${cfg.key}（${cfg.store} / API ${API_VERSION}）${dryRun ? ' [dry-run]' : ''}`);
@@ -154,6 +207,8 @@ async function run(cfg) {
       await updateDefinition(gql, def, existing, log);
     }
   }
+
+  await setupArticleMetafields(gql, log);
 }
 
 let failed = false;

@@ -1,18 +1,53 @@
 {%- comment -%}
   お知らせの1行。
   - article: 記事
-  - show_image: true でサムネイル画像を表示（画像が無い記事はパステル色の枠）
+  - show_image: true で正方形のサムネイルを表示（画像が無い記事はパステル色の枠）
   - index: パステル色の番号用（0始まり）
+
+  サムネイルは記事のメタフィールド（scripts/metaobject-definitions.json の articleMetafields）で記事ごとに調整できる:
+    custom.thumbnail   サムネイル専用画像（未設定なら記事の画像）
+    custom.thumb_mode  「切り取って表示」/「全体を表示」（未設定ならテーマ設定）
+    custom.thumb_bg    全体を表示するときの背景色（未設定ならテーマ設定）
+    custom.thumb_x / custom.thumb_y  切り取り位置 0〜100（%、未設定は 50 = 中央）
+    custom.thumb_zoom  拡大率 100〜300（%、未設定は 100）
 {%- endcomment -%}
-{%- assign pastel = index | default: 0 | modulo: 6 | plus: 1 -%}
+{%- liquid
+  assign pastel = index | default: 0 | modulo: 6 | plus: 1
+  if show_image
+    assign thumb = article.metafields.custom.thumbnail.value | default: article.image
+    assign thumb_mode = settings.news_thumb_mode | default: 'crop'
+    assign mode_value = article.metafields.custom.thumb_mode.value
+    if mode_value contains '全体'
+      assign thumb_mode = 'fit'
+    elsif mode_value contains '切り取'
+      assign thumb_mode = 'crop'
+    endif
+    assign thumb_bg = article.metafields.custom.thumb_bg.value | default: settings.news_thumb_bg
+    assign thumb_x = article.metafields.custom.thumb_x.value | default: 50 | at_least: 0 | at_most: 100
+    assign thumb_y = article.metafields.custom.thumb_y.value | default: 50 | at_least: 0 | at_most: 100
+    assign thumb_zoom = article.metafields.custom.thumb_zoom.value | default: 100 | at_least: 100 | at_most: 300 | divided_by: 100.0
+  endif
+-%}
 <a href="{{ article.url }}" class="b-news-row{% if show_image %} b-news-row--image{% endif %}">
   {%- if show_image -%}
-    <span class="b-news-row__thumb{% if article.image %} b-news-row__thumb--image{% endif %}" style="--ph-bg: var(--brand-pastel-{{ pastel }});">
-      {%- if article.image -%}
+    <span
+      class="b-news-row__thumb{% if thumb %} b-news-row__thumb--{{ thumb_mode }}{% endif %}"
+      style="--ph-bg: var(--brand-pastel-{{ pastel }});
+        {%- if thumb_bg != blank %} --thumb-bg: {{ thumb_bg }};{% endif -%}
+        {%- if thumb and thumb_mode == 'crop' %} --thumb-x: {{ thumb_x }}%; --thumb-y: {{ thumb_y }}%; --thumb-zoom: {{ thumb_zoom }};{% endif -%}"
+    >
+      {%- if thumb -%}
+        {%- liquid
+          assign thumb_alt = thumb.alt | default: article.title
+          assign thumb_width = 480
+          if thumb_mode == 'crop' and thumb_zoom > 1
+            assign thumb_width = 480 | times: thumb_zoom | ceil | at_most: 1440
+          endif
+        -%}
         {{
-          article.image
-          | image_url: width: 480
-          | image_tag: loading: 'lazy', widths: '200, 320, 480', sizes: '(min-width: 750px) 200px, 120px', alt: article.image.alt
+          thumb
+          | image_url: width: thumb_width
+          | image_tag: loading: 'lazy', widths: '200, 320, 480, 720, 960', sizes: '(min-width: 750px) 160px, 112px', alt: thumb_alt
         }}
       {%- endif -%}
     </span>
