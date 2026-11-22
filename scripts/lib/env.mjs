@@ -12,11 +12,12 @@ export function loadEnv(file = resolve(ROOT, '.env')) {
     if (!line || line.startsWith('#')) continue;
     const eq = line.indexOf('=');
     if (eq < 0) continue;
-    const key = line.slice(0, eq).trim();
-    let value = line.slice(eq + 1).trim();
-    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
-      value = value.slice(1, -1);
-    }
+    const key = line.slice(0, eq).replace(/^\ufeff/, '').trim();
+    // 前後の空白（全角スペース・改行・ゼロ幅文字を含む）と、引用符（" ' “ ” ‘ ’ 「 」）を取り除く
+    let value = line
+      .slice(eq + 1)
+      .replace(/^[\s\u3000\u200b\ufeff]+|[\s\u3000\u200b\ufeff]+$/g, '')
+      .replace(/^["'“”‘’「]+|["'“”‘’」]+$/g, '');
     if (process.env[key] === undefined) process.env[key] = value;
   }
 }

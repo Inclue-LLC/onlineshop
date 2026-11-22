@@ -22,7 +22,17 @@ export async function getAccessToken(cfg) {
     }),
   });
   const text = await res.text();
-  if (!res.ok) throw new Error(`[${cfg.key}] トークン取得に失敗しました（HTTP ${res.status}）: ${text.slice(0, 300)}`);
+  if (!res.ok) {
+    let hint = '';
+    if (/client secret/i.test(text)) {
+      hint = '\n    → クライアントシークレットが正しくありません。Dev Dashboard のアプリ設定から再度コピーしてください（ID と取り違えていないか、前後に空白や引用符が入っていないか）。';
+    } else if (/client_id|client id/i.test(text)) {
+      hint = '\n    → クライアントIDが正しくありません。';
+    } else if (res.status === 400 || res.status === 401) {
+      hint = '\n    → アプリがこのストアにインストールされているか、アプリとストアが同じ組織のものか確認してください。';
+    }
+    throw new Error(`[${cfg.key}] トークン取得に失敗しました（HTTP ${res.status}）: ${text.slice(0, 300)}${hint}`);
+  }
   const json = JSON.parse(text);
   if (!json.access_token) throw new Error(`[${cfg.key}] トークン取得の応答に access_token がありません: ${text.slice(0, 300)}`);
   return json.access_token;
