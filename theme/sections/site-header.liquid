@@ -18,7 +18,10 @@
   <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
 
-<header class="b-header{% if section.settings.sticky %} b-header--sticky{% endif %}">
+<header
+  class="b-header{% if section.settings.sticky %} b-header--sticky{% endif %}"
+  style="--logo-h: {{ section.settings.logo_height }}px; --wordmark-h: {{ section.settings.name_logo_height }}px;"
+>
   <div class="b-header__inner b-container">
     <a href="{{ routes.root_url }}" class="b-header__brand">
       {%- if settings.logo != blank -%}
@@ -27,10 +30,16 @@
           | image_url: width: 200
           | image_tag: class: 'b-header__logo', widths: '100, 200', alt: shop.name, loading: 'eager'
         }}
-      {%- else -%}
+      {%- elsif section.settings.name_logo == blank -%}
         <span class="b-header__logo b-header__logo--placeholder" aria-hidden="true">ロゴ</span>
       {%- endif -%}
-      {%- if section.settings.show_shop_name -%}
+      {%- if section.settings.name_logo != blank -%}
+        {{
+          section.settings.name_logo
+          | image_url: width: 600
+          | image_tag: class: 'b-header__wordmark', widths: '200, 400, 600', alt: shop.name, loading: 'eager'
+        }}
+      {%- elsif section.settings.show_shop_name -%}
         <span class="b-header__name">{{ shop.name | escape }}</span>
       {%- else -%}
         <span class="visually-hidden">{{ shop.name | escape }}</span>
@@ -122,9 +131,43 @@
   "enabled_on": { "groups": ["header"] },
   "settings": [
     {
+      "type": "header",
+      "content": "ロゴ"
+    },
+    {
+      "type": "paragraph",
+      "content": "左側のロゴ（マーク）は「テーマ設定 > ロゴ」で設定します。"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "ロゴ（マーク）の高さ（PC）",
+      "min": 30,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 52
+    },
+    {
+      "type": "image_picker",
+      "id": "name_logo",
+      "label": "ストア名のロゴ画像（ロゴタイプ）",
+      "info": "設定するとストア名の文字の代わりに表示されます。横長の透過PNG／SVG推奨。"
+    },
+    {
+      "type": "range",
+      "id": "name_logo_height",
+      "label": "ストア名のロゴ画像の高さ（PC）",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
       "type": "checkbox",
       "id": "show_shop_name",
-      "label": "ロゴの横にストア名を表示",
+      "label": "ロゴ画像が無いとき、ストア名を文字で表示",
       "default": true
     },
     {

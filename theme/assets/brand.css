@@ -473,21 +473,37 @@ h3,
 .b-header__logo {
   display: block;
   width: auto;
-  height: 4rem;
+  height: calc(var(--logo-h, 52px) * 0.77);
   max-width: 14rem;
   object-fit: contain;
 }
 
 @media screen and (min-width: 990px) {
   .b-header__logo {
-    height: 5.2rem;
+    height: var(--logo-h, 52px);
+    max-width: 24rem;
+  }
+}
+
+.b-header__wordmark {
+  display: block;
+  width: auto;
+  height: calc(var(--wordmark-h, 32px) * 0.75);
+  max-width: 50vw;
+  object-fit: contain;
+}
+
+@media screen and (min-width: 990px) {
+  .b-header__wordmark {
+    height: var(--wordmark-h, 32px);
+    max-width: 36rem;
   }
 }
 
 .b-header__logo--placeholder {
   display: grid;
   place-items: center;
-  width: 4rem;
+  width: calc(var(--logo-h, 52px) * 0.77);
   border-radius: 1.2rem;
   border: 1.5px dashed rgba(var(--color-button), 0.5);
   background: var(--brand-pastel-1);
@@ -497,7 +513,7 @@ h3,
 
 @media screen and (min-width: 990px) {
   .b-header__logo--placeholder {
-    width: 5.2rem;
+    width: var(--logo-h, 52px);
   }
 }
 
