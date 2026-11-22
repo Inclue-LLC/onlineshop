@@ -2,7 +2,7 @@
   "sections": {
     "main": {
       "type": "main-news-blog",
-      "settings": { "show_filter": true, "per_page": 20 }
+      "settings": { "show_filter": true, "show_image": true, "per_page": 20 }
     }
   },
   "order": ["main"]

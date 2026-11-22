@@ -1,0 +1,27 @@
+{%- comment -%}
+  お知らせの1行。
+  - article: 記事
+  - show_image: true でサムネイル画像を表示（画像が無い記事はパステル色の枠）
+  - index: パステル色の番号用（0始まり）
+{%- endcomment -%}
+{%- assign pastel = index | default: 0 | modulo: 6 | plus: 1 -%}
+<a href="{{ article.url }}" class="b-news-row{% if show_image %} b-news-row--image{% endif %}">
+  {%- if show_image -%}
+    <span class="b-news-row__thumb" style="--ph-bg: var(--brand-pastel-{{ pastel }});">
+      {%- if article.image -%}
+        {{
+          article.image
+          | image_url: width: 480
+          | image_tag: loading: 'lazy', widths: '200, 320, 480', sizes: '(min-width: 750px) 200px, 120px', alt: article.image.alt
+        }}
+      {%- endif -%}
+    </span>
+  {%- endif -%}
+  <span class="b-news-row__meta">
+    <time class="b-news-row__date" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+      {%- render 'b-date', date: article.published_at, format: 'ymd' -%}
+    </time>
+    <span class="b-news-row__cat">{%- render 'b-news-category', article: article -%}</span>
+  </span>
+  <span class="b-news-row__title">{{ article.title | escape }}</span>
+</a>

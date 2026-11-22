@@ -31,15 +31,9 @@
 <section class="b-section b-section--top-none">
   <div class="b-container">
     {%- paginate blog.articles by section.settings.per_page -%}
-      <div class="b-card b-news-rows">
+      <div class="b-card b-news-rows{% if section.settings.show_image %} b-news-rows--image{% endif %}">
         {%- for article in blog.articles -%}
-          <a href="{{ article.url }}" class="b-news-row">
-            <time class="b-news-row__date" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
-              {%- render 'b-date', date: article.published_at, format: 'ymd' -%}
-            </time>
-            <span class="b-news-row__cat">{%- render 'b-news-category', article: article -%}</span>
-            <span class="b-news-row__title">{{ article.title | escape }}</span>
-          </a>
+          {%- render 'b-news-row', article: article, show_image: section.settings.show_image, index: forloop.index0 -%}
         {%- else -%}
           <p class="b-news-row b-news-row--empty">お知らせはまだありません。</p>
         {%- endfor -%}
@@ -61,6 +55,7 @@
   "tag": "div",
   "settings": [
     { "type": "checkbox", "id": "show_filter", "label": "カテゴリの絞り込みを表示", "default": true, "info": "カテゴリは「テーマ設定 > ブランド設定 > お知らせ」で設定します。" },
+    { "type": "checkbox", "id": "show_image", "label": "記事の画像を表示", "default": true, "info": "記事の「画像」（アイキャッチ）を表示します。画像が無い記事は色付きの枠になります。" },
     { "type": "range", "id": "per_page", "label": "1ページの件数", "min": 5, "max": 50, "step": 5, "default": 20 }
   ]
 }

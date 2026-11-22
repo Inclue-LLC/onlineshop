@@ -10,15 +10,9 @@
       link_label: section.settings.more_label,
       link_url: more_url
     -%}
-    <div class="b-card b-news-rows">
+    <div class="b-card b-news-rows{% if section.settings.show_image %} b-news-rows--image{% endif %}">
       {%- for article in news_blog.articles limit: section.settings.limit -%}
-        <a href="{{ article.url }}" class="b-news-row">
-          <time class="b-news-row__date" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
-            {%- render 'b-date', date: article.published_at, format: 'ymd' -%}
-          </time>
-          <span class="b-news-row__cat">{%- render 'b-news-category', article: article -%}</span>
-          <span class="b-news-row__title">{{ article.title | escape }}</span>
-        </a>
+        {%- render 'b-news-row', article: article, show_image: section.settings.show_image, index: forloop.index0 -%}
       {%- else -%}
         <p class="b-news-row b-news-row--empty">
           {%- if news_blog == blank -%}ブログ「お知らせ」を選択してください。{%- else -%}お知らせはまだありません。{%- endif -%}
@@ -37,6 +31,7 @@
     { "type": "text", "id": "subheading", "label": "小見出し", "default": "NEWS" },
     { "type": "blog", "id": "blog", "label": "ブログ", "info": "未選択の場合は「news」" },
     { "type": "range", "id": "limit", "label": "表示件数", "min": 1, "max": 10, "step": 1, "default": 3 },
+    { "type": "checkbox", "id": "show_image", "label": "記事の画像を表示", "default": false },
     { "type": "text", "id": "more_label", "label": "右上リンクの文字", "default": "お知らせ一覧" },
     { "type": "url", "id": "more_url", "label": "右上リンクのリンク先", "info": "未設定の場合はブログの一覧" }
   ],
