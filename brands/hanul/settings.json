@@ -1,0 +1,30 @@
+{
+  "$comment": "スタジオハヌルのテーマ設定（配色など）。ロゴデータ（2509_Logo.ai）の色をもとに、文字・ボタンは読みやすい濃さに調整。node scripts/apply-brand.mjs hanul でストアのテーマに反映する。",
+  "palette": {
+    "logo_brown": "#978A79",
+    "caramel": "#D4B29A",
+    "cream": "#F4E1C7",
+    "ear": "#CCB698",
+    "cheek": "#F8CBC2"
+  },
+  "settings": {
+    "color_schemes": {
+      "scheme-1": { "settings": { "background": "#FCF8F3", "background_gradient": "", "text": "#5C4F43", "button": "#7D6E5D", "button_label": "#FFFFFF", "secondary_button_label": "#7D6E5D", "shadow": "#5C4F43" } },
+      "scheme-2": { "settings": { "background": "#FFFFFF", "background_gradient": "", "text": "#5C4F43", "button": "#7D6E5D", "button_label": "#FFFFFF", "secondary_button_label": "#7D6E5D", "shadow": "#5C4F43" } },
+      "scheme-3": { "settings": { "background": "#D4B29A", "background_gradient": "", "text": "#4F4339", "button": "#FFFFFF", "button_label": "#7D6E5D", "secondary_button_label": "#4F4339", "shadow": "#4F4339" } },
+      "scheme-4": { "settings": { "background": "#5E5247", "background_gradient": "", "text": "#FFFFFF", "button": "#FFFFFF", "button_label": "#5E5247", "secondary_button_label": "#FFFFFF", "shadow": "#5E5247" } },
+      "scheme-5": { "settings": { "background": "#F4E1C7", "background_gradient": "", "text": "#5C4F43", "button": "#7D6E5D", "button_label": "#FFFFFF", "secondary_button_label": "#7D6E5D", "shadow": "#5C4F43" } }
+    },
+    "brand_font_enable": true,
+    "brand_font_family": "M PLUS Rounded 1c",
+    "brand_accent_soft": "#F6EBDD",
+    "brand_live_color": "#A8705A",
+    "brand_line_color": "#ECE1D4",
+    "brand_pastel_1": "#F4E1C7",
+    "brand_pastel_2": "#F8E9DC",
+    "brand_pastel_3": "#FBE3DD",
+    "brand_pastel_4": "#EFE3D3",
+    "brand_pastel_5": "#F3ECE4",
+    "brand_pastel_6": "#E9D9C6"
+  }
+}

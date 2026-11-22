@@ -76,9 +76,36 @@ npm run dev
    - テーマ設定 > **ブランド設定**：フォント（Google Fonts 名）、淡色・パステル色、角丸、POP UP リンク判定、お知らせのカテゴリ、運営者表記
    - トップページの各セクション（ヘッダー画像・ブランド紹介・SNS リンクなど）
 
+### ブランドの配色・ロゴ（brands/）
+
+```
+brands/hanul/settings.json   スタジオハヌルの配色などのテーマ設定
+brands/hanul/logo/           ロゴ画像（2509_Logo.ai から書き出した透過 PNG）
+```
+
+配色を非公開テーマに反映する（`.env` の `<KEY>_THEME_ID` のテーマに送る。ロゴなどほかの設定は変わりません）:
+
+```bash
+npm run brand -- hanul --dry-run
+```
+
+```bash
+npm run brand -- hanul
+```
+
+ロゴはテーマエディタでアップロードします。
+
+| 画像 | 設定場所 |
+| --- | --- |
+| `hanul-icon-bear.png`（くまの顔） | テーマ設定 > ロゴ > ロゴ画像 |
+| `hanul-wordmark.png`（Studio Haneul の文字） | サイトヘッダー > ストア名のロゴ画像 |
+| `hanul-logo-square.png`（正方形） | テーマ設定 > ロゴ > ファビコン |
+
+ふにゅ・MongMong も `brands/funyu/`・`brands/mongmong/` を同じ形で作れば、同じ手順で反映できます。
+
 ### スタジオハヌルの初期値
 
-テーマの初期値はスタジオハヌル用です（背景 `#F4F9FD`／文字 `#1F2B3A`／アクセント `#2A6FB0`／フォント M PLUS Rounded 1c）。
+テーマの初期値はスタジオハヌル用です（ロゴの色に合わせた配色：背景 `#FCF8F3`／文字 `#5C4F43`／アクセント `#7D6E5D`／フォント M PLUS Rounded 1c）。
 ふにゅ・MongMong では、上記 4 のテーマ設定で色・ロゴ・フォント・文章・画像を変更します。コードの変更は不要です。
 
 ## 反映（コードの更新をストアに送る）

@@ -92,19 +92,19 @@
         "type": "color",
         "id": "brand_accent_soft",
         "label": "アクセント（淡色・バッジ背景）",
-        "default": "#E3EEF8"
+        "default": "#F6EBDD"
       },
       {
         "type": "color",
         "id": "brand_live_color",
         "label": "「開催中」バッジ",
-        "default": "#C8553D"
+        "default": "#A8705A"
       },
       {
         "type": "color",
         "id": "brand_line_color",
         "label": "区切り線",
-        "default": "#DCE7F2"
+        "default": "#ECE1D4"
       },
       {
         "type": "paragraph",
@@ -114,37 +114,37 @@
         "type": "color",
         "id": "brand_pastel_1",
         "label": "パステル 1",
-        "default": "#D9EAF7"
+        "default": "#F4E1C7"
       },
       {
         "type": "color",
         "id": "brand_pastel_2",
         "label": "パステル 2",
-        "default": "#FFF1C2"
+        "default": "#F8E9DC"
       },
       {
         "type": "color",
         "id": "brand_pastel_3",
         "label": "パステル 3",
-        "default": "#FDE0D2"
+        "default": "#FBE3DD"
       },
       {
         "type": "color",
         "id": "brand_pastel_4",
         "label": "パステル 4",
-        "default": "#E1F0E3"
+        "default": "#EFE3D3"
       },
       {
         "type": "color",
         "id": "brand_pastel_5",
         "label": "パステル 5",
-        "default": "#ECE4F5"
+        "default": "#F3ECE4"
       },
       {
         "type": "color",
         "id": "brand_pastel_6",
         "label": "パステル 6",
-        "default": "#FDE6EE"
+        "default": "#E9D9C6"
       },
       {
         "type": "header",
