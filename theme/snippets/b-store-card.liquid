@@ -1,0 +1,41 @@
+{%- comment -%}
+  店舗カード。
+  - store: retail_store メタオブジェクト（blank の場合はダミー表示）
+  - compact: true でトップページ用の簡易表示
+{%- endcomment -%}
+{%- liquid
+  assign map_url = store.map_url.value
+  if map_url == blank and store.address != blank
+    assign map_url = 'https://www.google.com/maps/search/?api=1&query=' | append: store.address.value | append: ' ' | append: store.name.value
+    assign map_url = map_url | replace: ' ', '+'
+  endif
+-%}
+<article class="b-card b-store-card{% if compact %} b-store-card--compact{% endif %}" data-area="{{ store.area.value | escape }}">
+  {%- if compact -%}
+    <p class="b-store-card__area">{{ store.area.value | default: '[エリア]' | escape }}</p>
+  {%- else -%}
+    <div class="b-store-card__badges">
+      {%- if store.area != blank -%}<span class="b-badge b-badge--soft">{{ store.area.value | escape }}</span>{%- endif -%}
+      {%- if store.store_type != blank -%}<span class="b-badge b-badge--gray">{{ store.store_type.value | escape }}</span>{%- endif -%}
+    </div>
+  {%- endif -%}
+  <h3 class="b-store-card__name">{{ store.name.value | default: '[店舗名]' | escape }}</h3>
+  {%- if compact -%}
+    <p class="b-text-muted">{{ store.address.value | default: '[住所]' | escape }}</p>
+    {%- if store.business_hours != blank -%}<p class="b-text-muted">{{ store.business_hours.value | escape }}</p>{%- endif -%}
+  {%- else -%}
+    <dl class="b-dl b-dl--plain">
+      {%- if store.address != blank -%}<div><dt>住所</dt><dd>{{ store.address.value | escape }}</dd></div>{%- endif -%}
+      {%- if store.business_hours != blank -%}<div><dt>営業時間</dt><dd>{{ store.business_hours.value | escape | newline_to_br }}</dd></div>{%- endif -%}
+      {%- if store.products_handled != blank -%}<div><dt>取扱商品</dt><dd>{{ store.products_handled.value | escape }}</dd></div>{%- endif -%}
+    </dl>
+    <div class="b-store-card__actions">
+      {%- if map_url != blank -%}
+        <a href="{{ map_url }}" class="b-btn b-btn--outline b-btn--small" target="_blank" rel="noopener">地図を見る</a>
+      {%- endif -%}
+      {%- if store.website_url != blank -%}
+        <a href="{{ store.website_url.value }}" class="b-btn b-btn--outline b-btn--small" target="_blank" rel="noopener">店舗サイト</a>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</article>

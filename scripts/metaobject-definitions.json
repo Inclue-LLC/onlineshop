@@ -1,0 +1,107 @@
+{
+  "$comment": "3ストア共通のメタオブジェクト定義。scripts/setup-metaobjects.mjs が各ストアに作成・追加する。キーを変更するとテーマ側の参照も変更が必要。",
+  "definitions": [
+    {
+      "type": "popup",
+      "name": "POP UP",
+      "description": "POP UP STORE の開催情報。終了日を過ぎると自動でサイトから非表示になります。",
+      "displayNameKey": "venue_name",
+      "fieldDefinitions": [
+        { "key": "venue_name", "name": "会場名", "type": "single_line_text_field", "required": true },
+        { "key": "start_date", "name": "会期開始日", "type": "date", "required": true },
+        { "key": "end_date", "name": "会期終了日", "type": "date", "required": true },
+        {
+          "key": "prefecture",
+          "name": "都道府県",
+          "type": "single_line_text_field",
+          "validations": [
+            {
+              "name": "choices",
+              "value": "[\"北海道\",\"青森県\",\"岩手県\",\"宮城県\",\"秋田県\",\"山形県\",\"福島県\",\"茨城県\",\"栃木県\",\"群馬県\",\"埼玉県\",\"千葉県\",\"東京都\",\"神奈川県\",\"新潟県\",\"富山県\",\"石川県\",\"福井県\",\"山梨県\",\"長野県\",\"岐阜県\",\"静岡県\",\"愛知県\",\"三重県\",\"滋賀県\",\"京都府\",\"大阪府\",\"兵庫県\",\"奈良県\",\"和歌山県\",\"鳥取県\",\"島根県\",\"岡山県\",\"広島県\",\"山口県\",\"徳島県\",\"香川県\",\"愛媛県\",\"高知県\",\"福岡県\",\"佐賀県\",\"長崎県\",\"熊本県\",\"大分県\",\"宮崎県\",\"鹿児島県\",\"沖縄県\"]"
+            }
+          ]
+        },
+        { "key": "address", "name": "住所", "type": "single_line_text_field" },
+        { "key": "business_hours", "name": "営業時間", "type": "multi_line_text_field", "description": "例：10:00〜20:00（最終日は18:00まで）" },
+        {
+          "key": "image",
+          "name": "告知画像",
+          "type": "file_reference",
+          "validations": [{ "name": "file_type_options", "value": "[\"Image\"]" }]
+        },
+        {
+          "key": "article",
+          "name": "詳細記事",
+          "type": "article_reference",
+          "fallbackType": "url",
+          "description": "お知らせ（ブログ記事）を選ぶと、記事ページに開催情報が表示されます。"
+        },
+        { "key": "bonus", "name": "購入特典", "type": "multi_line_text_field" },
+        { "key": "products", "name": "販売アイテム", "type": "list.product_reference" },
+        { "key": "notes", "name": "注意事項", "type": "multi_line_text_field", "description": "例：混雑時の入場制限、購入点数制限など" },
+        { "key": "map_url", "name": "地図URL", "type": "url", "description": "未入力の場合は住所から Google マップのリンクを作成します。" }
+      ]
+    },
+    {
+      "type": "retail_store",
+      "name": "店舗",
+      "description": "グッズを取り扱っている店舗。",
+      "displayNameKey": "name",
+      "fieldDefinitions": [
+        { "key": "name", "name": "店舗名", "type": "single_line_text_field", "required": true },
+        {
+          "key": "area",
+          "name": "エリア",
+          "type": "single_line_text_field",
+          "required": true,
+          "validations": [{ "name": "choices", "value": "[\"北海道・東北\",\"関東\",\"中部\",\"近畿\",\"中国・四国\",\"九州・沖縄\"]" }]
+        },
+        {
+          "key": "store_type",
+          "name": "種別",
+          "type": "single_line_text_field",
+          "validations": [{ "name": "choices", "value": "[\"常設コーナー\",\"取扱店\"]" }]
+        },
+        { "key": "address", "name": "住所", "type": "single_line_text_field" },
+        { "key": "business_hours", "name": "営業時間", "type": "multi_line_text_field" },
+        { "key": "products_handled", "name": "取扱商品", "type": "single_line_text_field", "description": "例：ぬいぐるみ・雑貨 など" },
+        { "key": "map_url", "name": "地図URL", "type": "url", "description": "未入力の場合は住所から Google マップのリンクを作成します。" },
+        { "key": "website_url", "name": "店舗サイトURL", "type": "url" },
+        { "key": "show_on_top", "name": "トップに表示する", "type": "boolean" },
+        { "key": "sort_order", "name": "表示順", "type": "number_integer", "description": "小さい順に表示（未入力は最後）" }
+      ]
+    },
+    {
+      "type": "character",
+      "name": "キャラクター",
+      "description": "キャラクター紹介ページ・トップページに表示するキャラクター。",
+      "displayNameKey": "name",
+      "fieldDefinitions": [
+        { "key": "name", "name": "名前", "type": "single_line_text_field", "required": true },
+        {
+          "key": "role",
+          "name": "区分",
+          "type": "single_line_text_field",
+          "required": true,
+          "validations": [{ "name": "choices", "value": "[\"メイン\",\"サブ\"]" }]
+        },
+        {
+          "key": "illustration",
+          "name": "イラスト",
+          "type": "file_reference",
+          "validations": [{ "name": "file_type_options", "value": "[\"Image\"]" }]
+        },
+        { "key": "description", "name": "紹介文", "type": "multi_line_text_field" },
+        { "key": "birthday", "name": "誕生日", "type": "single_line_text_field" },
+        { "key": "favorite", "name": "すきなもの", "type": "single_line_text_field" },
+        { "key": "sort_order", "name": "表示順", "type": "number_integer", "description": "小さい順に表示（未入力は最後）" },
+        { "key": "name_en", "name": "英語表記／韓国語表記", "type": "single_line_text_field" },
+        { "key": "short_description", "name": "ひとこと紹介（トップ用）", "type": "single_line_text_field" },
+        { "key": "dislikes", "name": "にがてなもの", "type": "single_line_text_field" },
+        { "key": "catchphrase", "name": "くちぐせ", "type": "single_line_text_field" },
+        { "key": "theme_color", "name": "イメージカラー（背景色）", "type": "color" },
+        { "key": "collection", "name": "グッズのコレクション", "type": "collection_reference" }
+      ]
+    }
+  ]
+}

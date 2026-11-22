@@ -1,0 +1,17 @@
+{%- comment -%}
+  ページがキャッシュされていても終了済みの POP UP を隠せるよう、
+  開催中・開催予定の会期を JSON で出力する（assets/brand.js が参照）。
+{%- endcomment -%}
+{%- capture popup_keys -%}{%- render 'popup-active-keys' -%}{%- endcapture -%}
+{%- assign popup_keys = popup_keys | strip | split: ',' -%}
+<script type="application/json" id="PopupRanges">
+  [
+    {%- for key in popup_keys -%}
+      {%- assign key_parts = key | split: '|' -%}
+      {%- assign popup = shop.metaobjects.popup[key_parts[2]] -%}
+      {%- assign p_end = popup.end_date.value | default: popup.start_date.value -%}
+      {"start": {{ popup.start_date.value | date: '%Y-%m-%d' | json }}, "end": {{ p_end | date: '%Y-%m-%d' | json }}}
+      {%- unless forloop.last %},{% endunless -%}
+    {%- endfor -%}
+  ]
+</script>

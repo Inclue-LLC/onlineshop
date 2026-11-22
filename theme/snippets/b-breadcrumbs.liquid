@@ -1,0 +1,14 @@
+{%- comment -%}
+  パンくずリスト。
+  - parent_title / parent_url: 中間の階層（任意）
+  - current: 現在のページ名
+{%- endcomment -%}
+<nav class="b-breadcrumbs" aria-label="パンくずリスト">
+  <ol>
+    <li><a href="{{ routes.root_url }}">トップ</a></li>
+    {%- if parent_title != blank -%}
+      <li><a href="{{ parent_url }}">{{ parent_title | escape }}</a></li>
+    {%- endif -%}
+    <li aria-current="page">{{ current | escape }}</li>
+  </ol>
+</nav>

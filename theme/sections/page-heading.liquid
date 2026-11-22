@@ -1,0 +1,29 @@
+{%- liquid
+  assign heading = section.settings.heading | default: page.title
+  assign description = section.settings.description
+  if description == blank and section.settings.use_page_content
+    assign description = page.content
+  endif
+-%}
+<section class="b-page-heading">
+  <div class="b-container">
+    {%- render 'b-breadcrumbs', current: heading -%}
+    <h1 class="b-page-title">{{ heading | escape }}</h1>
+    {%- if description != blank -%}
+      <div class="b-page-lead rte">{{ description }}</div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "ページ見出し",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "見出し", "info": "空欄の場合はページのタイトル" },
+    { "type": "richtext", "id": "description", "label": "説明文" },
+    { "type": "checkbox", "id": "use_page_content", "label": "説明文が空欄のとき、ページの本文を表示する", "default": true }
+  ],
+  "presets": [{ "name": "ページ見出し" }]
+}
+{% endschema %}

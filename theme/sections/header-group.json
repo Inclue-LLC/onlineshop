@@ -1,0 +1,25 @@
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "popup-announcement-bar": {
+      "type": "popup-announcement-bar",
+      "settings": {
+        "label": "POP UP STORE",
+        "fallback_url": "",
+        "color_scheme": "scheme-4"
+      }
+    },
+    "site-header": {
+      "type": "site-header",
+      "settings": {
+        "show_shop_name": true,
+        "menu": "main-menu",
+        "shop_label": "ショップ",
+        "shop_url": "",
+        "sticky": true
+      }
+    }
+  },
+  "order": ["popup-announcement-bar", "site-header"]
+}

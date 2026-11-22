@@ -1,0 +1,11 @@
+{%- comment -%}
+  画像未設定時のプレースホルダー。
+  - label: 表示する文字
+  - color: パステル番号 1〜6
+  - note: 補足（任意）
+  - dashed: true で点線枠
+{%- endcomment -%}
+<div class="b-ph{% if dashed %} b-ph--dashed{% endif %}" style="--ph-bg: var(--brand-pastel-{{ color | default: 1 }});">
+  <span class="b-ph__label">{{ label }}</span>
+  {%- if note != blank -%}<span class="b-ph__note">{{ note }}</span>{%- endif -%}
+</div>

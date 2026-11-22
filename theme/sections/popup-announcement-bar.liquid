@@ -1,0 +1,74 @@
+{%- comment -%}
+  ページ最上部の POP UP 告知バー。開催中（設定により開催予定も）が無いときは何も表示しない。
+{%- endcomment -%}
+{%- capture popup_keys -%}{%- render 'popup-active-keys' -%}{%- endcapture -%}
+{%- liquid
+  assign popup_keys = popup_keys | strip | split: ',' | sort
+  assign bar_popup = nil
+  assign bar_status = nil
+  for key in popup_keys
+    if key == blank
+      continue
+    endif
+    assign key_parts = key | split: '|'
+    if key_parts[1] == 'live' or settings.popup_bar_show_upcoming
+      assign bar_popup = shop.metaobjects.popup[key_parts[2]]
+      assign bar_status = key_parts[1]
+      break
+    endif
+  endfor
+-%}
+{%- if bar_popup -%}
+  {%- liquid
+    assign bar_url = section.settings.fallback_url | default: '/pages/popup'
+    if bar_popup.article.value != blank
+      assign bar_url = bar_popup.article.value.url | default: bar_popup.article.value
+    endif
+    assign p_end = bar_popup.end_date.value | default: bar_popup.start_date.value
+  -%}
+  <div
+    class="b-announcement color-{{ section.settings.color_scheme }}"
+    data-popup-only
+    data-popup-start="{{ bar_popup.start_date.value | date: '%Y-%m-%d' }}"
+    data-popup-end="{{ p_end | date: '%Y-%m-%d' }}"
+  >
+    <a href="{{ bar_url }}" class="b-announcement__link">
+      {{ section.settings.label | escape }}
+      {% if bar_status == 'live' %}開催中{% else %}開催予定{% endif %}：
+      {{- bar_popup.venue_name.value | escape -}}
+      （{%- render 'b-popup-period', popup: bar_popup, style: 'short' -%}）
+      <span class="b-announcement__more">→ 詳しく見る</span>
+    </a>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "POP UP 告知バー",
+  "enabled_on": { "groups": ["header"] },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "開催中の POP UP（メタオブジェクト「POP UP」）を自動で表示します。開催中・開催予定が無いときは表示されません。"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "先頭の文字",
+      "default": "POP UP STORE"
+    },
+    {
+      "type": "url",
+      "id": "fallback_url",
+      "label": "詳細記事が未設定のときのリンク先",
+      "info": "未設定の場合は /pages/popup"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "配色",
+      "default": "scheme-4"
+    }
+  ]
+}
+{% endschema %}

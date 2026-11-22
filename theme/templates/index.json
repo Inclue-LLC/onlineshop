@@ -1,0 +1,93 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-slider",
+      "blocks": {
+        "slide-1": { "type": "slide", "settings": {} },
+        "slide-2": { "type": "slide", "settings": {} },
+        "slide-3": { "type": "slide", "settings": {} }
+      },
+      "block_order": ["slide-1", "slide-2", "slide-3"],
+      "settings": { "label": "メインビジュアル", "autoplay": true, "interval": 5, "ratio_desktop": "2.4", "ratio_mobile": "1.25" }
+    },
+    "popup": {
+      "type": "popup-list",
+      "settings": {
+        "heading": "POP UP STORE",
+        "subheading": "開催中・開催予定のイベント",
+        "limit": 6,
+        "more_label": "過去のPOP UP",
+        "more_url": "/blogs/news/tagged/pop-up",
+        "show_empty_message": false,
+        "empty_message": "現在、開催中・開催予定のPOP UPはありません。"
+      }
+    },
+    "news": {
+      "type": "news-list",
+      "settings": { "heading": "お知らせ", "subheading": "NEWS", "blog": "news", "limit": 3, "more_label": "お知らせ一覧", "more_url": "" }
+    },
+    "shop": {
+      "type": "product-showcase",
+      "settings": {
+        "heading": "オンラインショップ",
+        "subheading": "新着・おすすめアイテム",
+        "limit": 4,
+        "new_tag": "NEW",
+        "tax_label": "（税込）",
+        "more_label": "すべての商品を見る",
+        "more_url": "",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "characters": {
+      "type": "character-showcase",
+      "settings": {
+        "heading": "キャラクター",
+        "subheading": "CHARACTERS",
+        "sub_limit": 4,
+        "page_url": "/pages/characters",
+        "button_label": "キャラクター紹介ページへ"
+      }
+    },
+    "about": {
+      "type": "brand-about",
+      "settings": {
+        "heading": "スタジオハヌルについて",
+        "subheading": "ABOUT",
+        "text": "<p>[ブランドのコンセプト・世界観の紹介文 3〜4行]</p>",
+        "note": "<p>[コラボ実績などの補足 1〜2行]</p>",
+        "button_label": "",
+        "button_url": "",
+        "color_scheme": "scheme-3"
+      }
+    },
+    "stores": {
+      "type": "store-list",
+      "settings": {
+        "mode": "top",
+        "limit": 3,
+        "show_filter": false,
+        "heading": "店舗情報",
+        "subheading": "スタジオハヌルのグッズが買えるお店",
+        "more_label": "すべての店舗を見る",
+        "more_url": "/pages/stores",
+        "note": "",
+        "empty_message": "取扱店舗は準備中です。"
+      }
+    },
+    "sns": {
+      "type": "sns-links",
+      "blocks": {
+        "line-sticker": { "type": "link", "settings": { "label": "LINEスタンプ", "sublabel": "LINE STORE", "url": "", "style": "line" } },
+        "line-official": { "type": "link", "settings": { "label": "LINE公式アカウント", "sublabel": "最新情報を配信", "url": "", "style": "line" } },
+        "x": { "type": "link", "settings": { "label": "X", "sublabel": "@[アカウント]", "url": "", "style": "dark" } },
+        "instagram": { "type": "link", "settings": { "label": "Instagram", "sublabel": "@[アカウント]", "url": "", "style": "dark" } },
+        "tiktok": { "type": "link", "settings": { "label": "TikTok", "sublabel": "@[アカウント]", "url": "", "style": "dark" } },
+        "youtube": { "type": "link", "settings": { "label": "YouTube", "sublabel": "[チャンネル名]", "url": "", "style": "dark" } }
+      },
+      "block_order": ["line-sticker", "line-official", "x", "instagram", "tiktok", "youtube"],
+      "settings": { "heading": "", "heading_suffix": "をもっと楽しむ" }
+    }
+  },
+  "order": ["hero", "popup", "news", "shop", "characters", "about", "stores", "sns"]
+}

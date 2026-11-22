@@ -1,0 +1,158 @@
+{%- comment -%}
+  サイトヘッダー（ロゴ・メニュー・ショップボタン・カート）。
+  メニューは「ナビゲーション」で作成したメニューを使う。
+  POP UP リンク（テーマ設定 > ブランド設定 > POP UP リンクの判定）は、開催中・開催予定が無いとき非表示になる。
+{%- endcomment -%}
+{%- capture popup_keys -%}{%- render 'popup-active-keys' -%}{%- endcapture -%}
+{%- liquid
+  assign popup_keys = popup_keys | strip
+  assign has_popup = false
+  if popup_keys != blank
+    assign has_popup = true
+  endif
+  assign popup_keyword = settings.popup_menu_keyword | strip
+-%}
+
+{%- if settings.cart_type == 'notification' -%}
+  <link rel="stylesheet" href="{{ 'component-cart-notification.css' | asset_url }}" media="print" onload="this.media='all'">
+  <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+<header class="b-header{% if section.settings.sticky %} b-header--sticky{% endif %}">
+  <div class="b-header__inner b-container">
+    <a href="{{ routes.root_url }}" class="b-header__brand">
+      {%- if settings.logo != blank -%}
+        {{
+          settings.logo
+          | image_url: width: 200
+          | image_tag: class: 'b-header__logo', widths: '100, 200', alt: shop.name, loading: 'eager'
+        }}
+      {%- else -%}
+        <span class="b-header__logo b-header__logo--placeholder" aria-hidden="true">ロゴ</span>
+      {%- endif -%}
+      {%- if section.settings.show_shop_name -%}
+        <span class="b-header__name">{{ shop.name | escape }}</span>
+      {%- else -%}
+        <span class="visually-hidden">{{ shop.name | escape }}</span>
+      {%- endif -%}
+    </a>
+
+    <nav class="b-header__nav" aria-label="メインメニュー">
+      <ul class="b-header__menu">
+        {%- for link in section.settings.menu.links -%}
+          {%- liquid
+            assign is_popup_link = false
+            if link.title == popup_keyword or link.url contains '/pages/popup'
+              assign is_popup_link = true
+            endif
+            if is_popup_link and has_popup == false
+              continue
+            endif
+          -%}
+          <li{% if is_popup_link %} data-popup-only{% endif %}>
+            <a
+              href="{{ link.url }}"
+              class="b-header__link{% if link.active or link.child_active %} is-active{% endif %}"
+              {% if link.active %}
+                aria-current="page"
+              {% endif %}
+            >
+              {{- link.title | escape -}}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="b-header__actions">
+      {%- if section.settings.shop_label != blank -%}
+        <a href="{{ section.settings.shop_url | default: routes.all_products_collection_url }}" class="b-btn b-header__shop">
+          {{- section.settings.shop_label | escape -}}
+        </a>
+      {%- endif -%}
+      <a href="{{ routes.cart_url }}" class="b-header__cart" id="cart-icon-bubble">
+        {%- render 'cart-icon-bubble-inner' -%}
+      </a>
+
+      <details class="b-header__drawer">
+        <summary class="b-header__toggle" aria-label="メニューを開く">
+          <span class="b-header__toggle-bar" aria-hidden="true"></span>
+        </summary>
+        <div class="b-header__drawer-panel">
+          <ul class="b-header__drawer-menu">
+            {%- for link in section.settings.menu.links -%}
+              {%- liquid
+                assign is_popup_link = false
+                if link.title == popup_keyword or link.url contains '/pages/popup'
+                  assign is_popup_link = true
+                endif
+                if is_popup_link and has_popup == false
+                  continue
+                endif
+              -%}
+              <li{% if is_popup_link %} data-popup-only{% endif %}>
+                <a href="{{ link.url }}" class="{% if link.active or link.child_active %}is-active{% endif %}">
+                  {{- link.title | escape -}}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+          {%- if section.settings.shop_label != blank -%}
+            <a
+              href="{{ section.settings.shop_url | default: routes.all_products_collection_url }}"
+              class="b-btn b-btn--block"
+            >
+              {{- section.settings.shop_label | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+{%- if settings.cart_type == 'notification' -%}
+  {%- render 'cart-notification', color_scheme: 'scheme-2', desktop_menu_type: 'dropdown' -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "サイトヘッダー",
+  "class": "b-header-section",
+  "enabled_on": { "groups": ["header"] },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_shop_name",
+      "label": "ロゴの横にストア名を表示",
+      "default": true
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "メニュー",
+      "default": "main-menu",
+      "info": "POP UP／お知らせ／キャラクター／店舗情報 などを登録します（ショップ・カートは右側に自動で表示）。"
+    },
+    {
+      "type": "text",
+      "id": "shop_label",
+      "label": "ショップボタンの文字",
+      "default": "ショップ",
+      "info": "空欄にするとボタンを表示しません。"
+    },
+    {
+      "type": "url",
+      "id": "shop_url",
+      "label": "ショップボタンのリンク先",
+      "info": "未設定の場合は全商品一覧"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "スクロールしてもヘッダーを上部に固定",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

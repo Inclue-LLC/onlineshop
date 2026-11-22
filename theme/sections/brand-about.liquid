@@ -1,0 +1,42 @@
+<section class="b-section b-about color-{{ section.settings.color_scheme }} gradient">
+  <div class="b-container b-about__inner">
+    <div class="b-about__body">
+      {%- if section.settings.heading != blank -%}<h2 class="b-title">{{ section.settings.heading | escape }}</h2>{%- endif -%}
+      {%- if section.settings.subheading != blank -%}<p class="b-subtitle">{{ section.settings.subheading | escape }}</p>{%- endif -%}
+      {%- if section.settings.text != blank -%}<div class="b-about__text rte">{{ section.settings.text }}</div>{%- endif -%}
+      {%- if section.settings.note != blank -%}<div class="b-about__note rte">{{ section.settings.note }}</div>{%- endif -%}
+      {%- if section.settings.button_label != blank and section.settings.button_url != blank -%}
+        <a href="{{ section.settings.button_url }}" class="b-btn b-btn--outline">{{ section.settings.button_label | escape }}</a>
+      {%- endif -%}
+    </div>
+    <div class="b-about__media">
+      {%- if section.settings.image != blank -%}
+        {{
+          section.settings.image
+          | image_url: width: 1200
+          | image_tag: loading: 'lazy', widths: '500, 800, 1200', sizes: '(min-width: 990px) 560px, 100vw'
+        }}
+      {%- else -%}
+        <div class="b-ph b-ph--dashed b-ph--translucent"><span class="b-ph__label">世界観イラスト</span></div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "ブランド紹介",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "見出し", "default": "ブランドについて" },
+    { "type": "text", "id": "subheading", "label": "小見出し", "default": "ABOUT" },
+    { "type": "richtext", "id": "text", "label": "本文", "default": "<p>[ブランドのコンセプト・世界観の紹介文 3〜4行]</p>" },
+    { "type": "richtext", "id": "note", "label": "補足", "default": "<p>[コラボ実績などの補足 1〜2行]</p>" },
+    { "type": "image_picker", "id": "image", "label": "画像" },
+    { "type": "text", "id": "button_label", "label": "ボタンの文字" },
+    { "type": "url", "id": "button_url", "label": "ボタンのリンク先" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "配色", "default": "scheme-3" }
+  ],
+  "presets": [{ "name": "ブランド紹介" }]
+}
+{% endschema %}

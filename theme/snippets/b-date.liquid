@@ -1,0 +1,20 @@
+{%- comment -%}
+  日付を日本式で表示する。
+  - date: 日付
+  - format: 'ymd'（2026.12.01）/ 'ymd_w'（2026.12.01（火））/ 'md'（12/01）/ 'md_w'（12.01（火））
+{%- endcomment -%}
+{%- liquid
+  assign weekday_index = date | date: '%w' | plus: 0
+  assign weekdays = '日,月,火,水,木,金,土' | split: ','
+  assign weekday = weekdays[weekday_index]
+  case format
+    when 'ymd_w'
+      echo date | date: '%Y.%m.%d' | append: '（' | append: weekday | append: '）'
+    when 'md'
+      echo date | date: '%m/%d'
+    when 'md_w'
+      echo date | date: '%m.%d' | append: '（' | append: weekday | append: '）'
+    else
+      echo date | date: '%Y.%m.%d'
+  endcase
+-%}

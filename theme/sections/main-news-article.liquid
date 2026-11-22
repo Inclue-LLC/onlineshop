@@ -1,0 +1,147 @@
+{%- comment -%}
+  お知らせ詳細。POP UP（メタオブジェクト）の「詳細記事」にこの記事が設定されていれば、
+  開催情報の表・販売アイテム・注意事項を自動で表示する。
+{%- endcomment -%}
+{%- liquid
+  assign related_popup = nil
+  for popup in shop.metaobjects.popup.values
+    assign ref = popup.article.value
+    if ref == blank
+      continue
+    endif
+    if ref.id != blank
+      if ref.id == article.id
+        assign related_popup = popup
+        break
+      endif
+    elsif ref contains article.url
+      assign related_popup = popup
+      break
+    endif
+  endfor
+  assign share_url = request.origin | append: article.url
+-%}
+<div class="b-article-page">
+  <div class="b-container b-container--narrow">
+    {%- render 'b-breadcrumbs', parent_title: blog.title, parent_url: blog.url, current: article.title -%}
+
+    <article class="b-card b-article">
+      <div class="b-article__meta">
+        <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{%- render 'b-date', date: article.published_at, format: 'ymd' -%}</time>
+        {%- render 'b-news-category', article: article -%}
+      </div>
+      <h1 class="b-article__title">{{ article.title | escape }}</h1>
+
+      {%- liquid
+        assign visual = article.image
+        if visual == blank and related_popup
+          assign visual = related_popup.image.value
+        endif
+      -%}
+      {%- if visual != blank -%}
+        <div class="b-article__visual">
+          {{
+            visual
+            | image_url: width: 1600
+            | image_tag: loading: 'eager', fetchpriority: 'high', widths: '600, 900, 1200, 1600', sizes: '(min-width: 860px) 764px, 100vw', alt: article.title
+          }}
+        </div>
+      {%- endif -%}
+
+      <div class="b-article__content rte">{{ article.content }}</div>
+
+      {%- if related_popup -%}
+        {%- liquid
+          assign map_url = related_popup.map_url.value
+          if map_url == blank and related_popup.address != blank
+            assign map_url = 'https://www.google.com/maps/search/?api=1&query=' | append: related_popup.address.value | replace: ' ', '+'
+          endif
+        -%}
+        <div class="b-info-box">
+          <h2 class="b-info-box__title">{{ section.settings.info_heading | escape }}</h2>
+          <dl class="b-dl">
+            <div><dt>会期</dt><dd>{%- render 'b-popup-period', popup: related_popup, style: 'long' -%}</dd></div>
+            {%- if related_popup.venue_name != blank -%}<div><dt>会場</dt><dd>{{ related_popup.venue_name.value | escape }}</dd></div>{%- endif -%}
+            {%- if related_popup.address != blank -%}
+              <div>
+                <dt>住所</dt>
+                <dd>
+                  {% if related_popup.prefecture != blank and related_popup.address.value contains related_popup.prefecture.value %}{% elsif related_popup.prefecture != blank %}{{ related_popup.prefecture.value | escape }}{% endif %}
+                  {{- related_popup.address.value | escape }}
+                  {%- if map_url != blank %}&ensp;<a href="{{ map_url }}" target="_blank" rel="noopener">地図を見る</a>{% endif -%}
+                </dd>
+              </div>
+            {%- endif -%}
+            {%- if related_popup.business_hours != blank -%}<div><dt>営業時間</dt><dd>{{ related_popup.business_hours.value | escape | newline_to_br }}</dd></div>{%- endif -%}
+            {%- if related_popup.bonus != blank -%}<div><dt>購入特典</dt><dd>{{ related_popup.bonus.value | escape | newline_to_br }}</dd></div>{%- endif -%}
+          </dl>
+        </div>
+
+        {%- assign popup_products = related_popup.products.value -%}
+        {%- if popup_products != blank and popup_products.size > 0 -%}
+          <h2 class="b-title b-title--small">{{ section.settings.items_heading | escape }}</h2>
+          <div class="b-grid b-grid--4 b-grid--sp-2">
+            {%- for product in popup_products -%}
+              {%- render 'b-product-card', product: product, index: forloop.index0, show_type: false, show_price: section.settings.show_price -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        {%- if related_popup.notes != blank -%}
+          <p class="b-note">※ {{ related_popup.notes.value | escape | newline_to_br }}</p>
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if section.settings.show_share -%}
+        <div class="b-share">
+          <span class="b-share__label">シェア</span>
+          <a
+            class="b-share__btn b-share__btn--x"
+            href="https://twitter.com/intent/tweet?text={{ article.title | url_encode }}&url={{ share_url | url_encode }}"
+            target="_blank"
+            rel="noopener"
+            aria-label="X でシェア"
+            >X</a
+          >
+          <a
+            class="b-share__btn b-share__btn--line"
+            href="https://social-plugins.line.me/lineit/share?url={{ share_url | url_encode }}"
+            target="_blank"
+            rel="noopener"
+            aria-label="LINE で送る"
+            >LINE</a
+          >
+          <button type="button" class="b-share__btn b-share__btn--copy" data-copy-url="{{ share_url }}" data-copied-label="コピーしました">
+            URLをコピー
+          </button>
+        </div>
+      {%- endif -%}
+    </article>
+
+    <nav class="b-article-nav" aria-label="記事の移動">
+      {%- assign prev_article = blog.previous_article -%}
+      {%- assign next_article = blog.next_article -%}
+      <div>
+        {%- if prev_article -%}<a href="{{ prev_article.url | default: prev_article }}" class="b-btn b-btn--white">← 前の記事</a>{%- endif -%}
+      </div>
+      <a href="{{ blog.url }}" class="b-btn">{{ blog.title | escape }}一覧へ</a>
+      <div>
+        {%- if next_article -%}<a href="{{ next_article.url | default: next_article }}" class="b-btn b-btn--white">次の記事 →</a>{%- endif -%}
+      </div>
+    </nav>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "お知らせ詳細",
+  "tag": "div",
+  "settings": [
+    { "type": "paragraph", "content": "POP UP の「詳細記事」にこの記事を設定すると、開催情報・販売アイテム・注意事項が自動で表示されます。" },
+    { "type": "text", "id": "info_heading", "label": "開催情報の見出し", "default": "開催情報" },
+    { "type": "text", "id": "items_heading", "label": "販売アイテムの見出し", "default": "販売アイテム" },
+    { "type": "checkbox", "id": "show_price", "label": "販売アイテムに価格を表示", "default": false },
+    { "type": "checkbox", "id": "show_share", "label": "シェアボタンを表示", "default": true }
+  ]
+}
+{% endschema %}

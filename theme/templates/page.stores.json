@@ -1,0 +1,27 @@
+{
+  "sections": {
+    "heading": {
+      "type": "page-heading",
+      "settings": {
+        "heading": "",
+        "description": "<p>スタジオハヌルのグッズを取り扱っているお店です。期間限定のPOP UPは<a href=\"/pages/popup\" title=\"POP UP情報\">POP UP情報</a>をご覧ください。</p>",
+        "use_page_content": true
+      }
+    },
+    "stores": {
+      "type": "store-list",
+      "settings": {
+        "mode": "all",
+        "limit": 3,
+        "show_filter": true,
+        "heading": "",
+        "subheading": "",
+        "more_label": "",
+        "more_url": "",
+        "note": "※ 在庫状況は店舗により異なります。お出かけ前に各店舗へお問い合わせください。",
+        "empty_message": "取扱店舗は準備中です。"
+      }
+    }
+  },
+  "order": ["heading", "stores"]
+}

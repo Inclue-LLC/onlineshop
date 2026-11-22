@@ -1,0 +1,70 @@
+<section class="b-section b-sns">
+  <div class="b-container">
+    <div class="b-card b-sns__box">
+      <h2 class="b-title b-title--small b-center">{{ section.settings.heading | default: shop.name | escape }}{{ section.settings.heading_suffix | escape }}</h2>
+      <ul class="b-sns__list">
+        {%- for block in section.blocks -%}
+          <li {{ block.shopify_attributes }}>
+            <a
+              href="{{ block.settings.url | default: '#' }}"
+              class="b-sns__btn b-sns__btn--{{ block.settings.style }}"
+              target="_blank"
+              rel="noopener"
+            >
+              <span class="b-sns__label">{{ block.settings.label | escape }}</span>
+              {%- if block.settings.sublabel != blank -%}<span class="b-sns__sub">{{ block.settings.sublabel | escape }}</span>{%- endif -%}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "各種リンク（SNS）",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "見出し", "info": "空欄の場合はストア名" },
+    { "type": "text", "id": "heading_suffix", "label": "見出しの後ろの文字", "default": "をもっと楽しむ" }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "リンク",
+      "settings": [
+        { "type": "text", "id": "label", "label": "名前", "default": "X" },
+        { "type": "text", "id": "sublabel", "label": "補足（アカウント名など）", "default": "@[アカウント]" },
+        { "type": "url", "id": "url", "label": "リンク先" },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "ボタンの色",
+          "default": "dark",
+          "options": [
+            { "value": "line", "label": "LINE（緑）" },
+            { "value": "dark", "label": "ダーク" },
+            { "value": "accent", "label": "アクセントカラー" },
+            { "value": "outline", "label": "白（枠線）" }
+          ]
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "各種リンク（SNS）",
+      "blocks": [
+        { "type": "link", "settings": { "label": "LINEスタンプ", "sublabel": "LINE STORE", "style": "line" } },
+        { "type": "link", "settings": { "label": "LINE公式アカウント", "sublabel": "最新情報を配信", "style": "line" } },
+        { "type": "link", "settings": { "label": "X", "sublabel": "@[アカウント]", "style": "dark" } },
+        { "type": "link", "settings": { "label": "Instagram", "sublabel": "@[アカウント]", "style": "dark" } },
+        { "type": "link", "settings": { "label": "TikTok", "sublabel": "@[アカウント]", "style": "dark" } },
+        { "type": "link", "settings": { "label": "YouTube", "sublabel": "[チャンネル名]", "style": "dark" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

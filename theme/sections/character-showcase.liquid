@@ -1,0 +1,97 @@
+{%- capture character_keys -%}{%- render 'character-sorted-keys' -%}{%- endcapture -%}
+{%- liquid
+  assign character_keys = character_keys | strip | split: ',' | sort
+  assign main_character = nil
+  for key in character_keys
+    assign key_parts = key | split: '|'
+    if key_parts[1] == 'main'
+      assign main_character = shop.metaobjects.character[key_parts[2]]
+      break
+    endif
+  endfor
+-%}
+<section class="b-section b-character-showcase">
+  <div class="b-container">
+    {%- render 'b-section-head', heading: section.settings.heading, subheading: section.settings.subheading -%}
+
+    <div class="b-card b-split">
+      <div class="b-split__media" style="--ph-bg: var(--brand-pastel-1);">
+        {%- if main_character.illustration.value != blank -%}
+          {{
+            main_character.illustration.value
+            | image_url: width: 1200
+            | image_tag: loading: 'lazy', widths: '500, 800, 1200', sizes: '(min-width: 990px) 600px, 100vw', alt: main_character.name.value
+          }}
+        {%- else -%}
+          <span class="b-ph__label">メインキャラクター イラスト</span>
+        {%- endif -%}
+      </div>
+      <div class="b-split__body">
+        <span class="b-badge b-badge--soft">メインキャラクター</span>
+        <h3 class="b-split__title">{{ main_character.name.value | default: '[キャラクター名]' | escape }}</h3>
+        <p class="b-text-muted">
+          {{- main_character.short_description.value | default: main_character.description.value | default: '[キャラクターの簡単な紹介文 1〜2行]' | strip_newlines | truncate: 80 | escape -}}
+        </p>
+        {%- if section.settings.page_url != blank -%}
+          <a href="{{ section.settings.page_url }}" class="b-more">プロフィールを見る →</a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <ul class="b-grid b-grid--4 b-grid--sp-2 b-sub-characters">
+      {%- assign sub_count = 0 -%}
+      {%- for key in character_keys -%}
+        {%- assign key_parts = key | split: '|' -%}
+        {%- if key_parts[1] != 'sub' -%}{%- continue -%}{%- endif -%}
+        {%- if sub_count >= section.settings.sub_limit -%}{%- break -%}{%- endif -%}
+        {%- assign sub_count = sub_count | plus: 1 -%}
+        {%- assign character = shop.metaobjects.character[key_parts[2]] -%}
+        {%- assign pastel = sub_count | modulo: 6 | plus: 1 -%}
+        <li class="b-card b-sub-character">
+          <div class="b-sub-character__icon" style="--ph-bg: {% if character.theme_color != blank %}{{ character.theme_color.value }}{% else %}var(--brand-pastel-{{ pastel }}){% endif %};">
+            {%- if character.illustration.value != blank -%}
+              {{ character.illustration.value | image_url: width: 300 | image_tag: loading: 'lazy', alt: character.name.value }}
+            {%- else -%}
+              <span class="b-ph__label">イラスト</span>
+            {%- endif -%}
+          </div>
+          <p class="b-sub-character__name">{{ character.name.value | escape }}</p>
+          <p class="b-sub-character__text">
+            {{- character.short_description.value | default: character.description.value | strip_newlines | truncate: 30 | escape -}}
+          </p>
+        </li>
+      {%- endfor -%}
+      {%- if sub_count == 0 -%}
+        {%- for i in (1..4) -%}
+          <li class="b-card b-sub-character">
+            <div class="b-sub-character__icon" style="--ph-bg: var(--brand-pastel-{{ i | plus: 1 }});"><span class="b-ph__label">イラスト</span></div>
+            <p class="b-sub-character__name">[サブキャラ名]</p>
+            <p class="b-sub-character__text">[ひとこと紹介]</p>
+          </li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+
+    {%- if section.settings.button_label != blank and section.settings.page_url != blank -%}
+      <div class="b-center">
+        <a href="{{ section.settings.page_url }}" class="b-btn b-btn--outline">{{ section.settings.button_label | escape }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "キャラクター紹介（簡易）",
+  "tag": "div",
+  "settings": [
+    { "type": "paragraph", "content": "キャラクターはメタオブジェクト「キャラクター」で管理します。区分が「メイン」の先頭1件と「サブ」を表示順に表示します。" },
+    { "type": "text", "id": "heading", "label": "見出し", "default": "キャラクター" },
+    { "type": "text", "id": "subheading", "label": "小見出し", "default": "CHARACTERS" },
+    { "type": "range", "id": "sub_limit", "label": "サブキャラクターの表示数", "min": 0, "max": 12, "step": 1, "default": 4 },
+    { "type": "url", "id": "page_url", "label": "キャラクター紹介ページ", "default": "/pages/characters" },
+    { "type": "text", "id": "button_label", "label": "ボタンの文字", "default": "キャラクター紹介ページへ" }
+  ],
+  "presets": [{ "name": "キャラクター紹介（簡易）" }]
+}
+{% endschema %}

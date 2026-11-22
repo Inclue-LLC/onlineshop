@@ -1,0 +1,54 @@
+{%- comment -%}
+  POP UP STORE 一覧（開催中・開催予定）。メタオブジェクト「POP UP」から自動表示。
+  1件も無いときはセクションごと非表示（「該当なしのメッセージ」をオンにした場合のみメッセージを表示）。
+{%- endcomment -%}
+{%- capture popup_keys -%}{%- render 'popup-active-keys' -%}{%- endcapture -%}
+{%- assign popup_keys = popup_keys | strip | split: ',' | sort -%}
+
+{%- if popup_keys.size > 0 or section.settings.show_empty_message -%}
+  <section
+    class="b-section b-popup-list"
+    {% if popup_keys.size > 0 %}
+      data-popup-only data-popup-container
+    {% endif %}
+    id="popup"
+  >
+    <div class="b-container">
+      {%- render 'b-section-head',
+        heading: section.settings.heading,
+        subheading: section.settings.subheading,
+        link_label: section.settings.more_label,
+        link_url: section.settings.more_url
+      -%}
+      {%- if popup_keys.size > 0 -%}
+        <div class="b-grid b-grid--3">
+          {%- for key in popup_keys limit: section.settings.limit -%}
+            {%- assign key_parts = key | split: '|' -%}
+            {%- assign popup = shop.metaobjects.popup[key_parts[2]] -%}
+            {%- render 'b-popup-card', popup: popup, status: key_parts[1], index: forloop.index0 -%}
+          {%- endfor -%}
+        </div>
+      {%- else -%}
+        <p class="b-empty">{{ section.settings.empty_message | escape }}</p>
+      {%- endif -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "POP UP STORE",
+  "tag": "div",
+  "settings": [
+    { "type": "paragraph", "content": "POP UP はメタオブジェクト「POP UP」で管理します（コンテンツ > メタオブジェクト）。終了日を過ぎたものは自動で非表示になります。" },
+    { "type": "text", "id": "heading", "label": "見出し", "default": "POP UP STORE" },
+    { "type": "text", "id": "subheading", "label": "小見出し", "default": "開催中・開催予定のイベント" },
+    { "type": "range", "id": "limit", "label": "最大表示件数", "min": 1, "max": 24, "step": 1, "default": 6 },
+    { "type": "text", "id": "more_label", "label": "右上リンクの文字", "default": "過去のPOP UP" },
+    { "type": "url", "id": "more_url", "label": "右上リンクのリンク先", "info": "例：/blogs/news/tagged/pop-up（POP UP タグのお知らせ一覧）" },
+    { "type": "checkbox", "id": "show_empty_message", "label": "1件も無いときにメッセージを表示する", "default": false, "info": "オフの場合はセクションごと非表示になります（トップページ向け）。" },
+    { "type": "text", "id": "empty_message", "label": "該当なしのメッセージ", "default": "現在、開催中・開催予定のPOP UPはありません。" }
+  ],
+  "presets": [{ "name": "POP UP STORE" }]
+}
+{% endschema %}

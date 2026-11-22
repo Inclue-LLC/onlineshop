@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "heading": {
+      "type": "page-heading",
+      "settings": { "heading": "", "description": "", "use_page_content": true }
+    },
+    "popup": {
+      "type": "popup-list",
+      "settings": {
+        "heading": "",
+        "subheading": "",
+        "limit": 24,
+        "more_label": "過去のPOP UP",
+        "more_url": "/blogs/news/tagged/pop-up",
+        "show_empty_message": true,
+        "empty_message": "現在、開催中・開催予定のPOP UPはありません。"
+      }
+    }
+  },
+  "order": ["heading", "popup"]
+}

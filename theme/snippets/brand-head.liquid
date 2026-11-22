@@ -1,0 +1,43 @@
+{%- comment -%}
+  ブランド設定（テーマ設定 > ブランド設定）を CSS 変数として出力し、ブランドフォントと brand.css を読み込む。
+  layout/theme.liquid の base.css の直後で render する。
+{%- endcomment -%}
+{%- liquid
+  assign use_brand_font = false
+  if settings.brand_font_enable and settings.brand_font_family != blank
+    assign use_brand_font = true
+    assign gf_name = settings.brand_font_family | strip
+    assign gf_family = gf_name | url_encode | replace: '%20', '+'
+    assign gf_weights = settings.brand_font_weights | default: '400;700' | remove: ' '
+  endif
+-%}
+{%- if use_brand_font -%}
+  {% comment %}theme-check-disable RemoteAsset{% endcomment %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family={{ gf_family }}:wght@{{ gf_weights }}&display=swap">
+  {% comment %}theme-check-enable RemoteAsset{% endcomment %}
+{%- endif -%}
+{%- style -%}
+  :root {
+    --brand-accent-soft: {{ settings.brand_accent_soft }};
+    --brand-live: {{ settings.brand_live_color }};
+    --brand-line: {{ settings.brand_line_color }};
+    --brand-pastel-1: {{ settings.brand_pastel_1 }};
+    --brand-pastel-2: {{ settings.brand_pastel_2 }};
+    --brand-pastel-3: {{ settings.brand_pastel_3 }};
+    --brand-pastel-4: {{ settings.brand_pastel_4 }};
+    --brand-pastel-5: {{ settings.brand_pastel_5 }};
+    --brand-pastel-6: {{ settings.brand_pastel_6 }};
+    --brand-radius: {{ settings.brand_radius }}px;
+    --brand-heading-weight: {{ settings.brand_heading_weight | default: '800' }};
+    {%- if use_brand_font %}
+      --font-body-family: '{{ gf_name }}', {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+      --font-heading-family: '{{ gf_name }}', {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+      --font-heading-weight: {{ settings.brand_heading_weight | default: '800' }};
+      --font-body-weight: 400;
+      --font-body-weight-bold: 700;
+    {%- endif %}
+  }
+{%- endstyle -%}
+{{ 'brand.css' | asset_url | stylesheet_tag }}

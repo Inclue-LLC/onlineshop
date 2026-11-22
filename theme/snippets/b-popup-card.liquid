@@ -1,0 +1,48 @@
+{%- comment -%}
+  POP UP カード。
+  - popup: popup メタオブジェクト
+  - status: 'live' / 'upcoming'
+  - index: パステル番号用
+{%- endcomment -%}
+{%- liquid
+  assign p_end = popup.end_date.value | default: popup.start_date.value
+  assign card_url = nil
+  if popup.article.value != blank
+    assign card_url = popup.article.value.url | default: popup.article.value
+  endif
+-%}
+<article
+  class="b-popup-card b-card"
+  data-popup-start="{{ popup.start_date.value | date: '%Y-%m-%d' }}"
+  data-popup-end="{{ p_end | date: '%Y-%m-%d' }}"
+>
+  {%- if card_url -%}<a href="{{ card_url }}" class="b-popup-card__link">{%- endif -%}
+  <div class="b-popup-card__media" style="--ph-bg: var(--brand-pastel-2);">
+    {%- if popup.image.value != blank -%}
+      {{
+        popup.image.value
+        | image_url: width: 900
+        | image_tag: loading: 'lazy', widths: '400, 600, 900', sizes: '(min-width: 990px) 400px, 100vw', alt: popup.venue_name.value
+      }}
+    {%- else -%}
+      <span class="b-ph__label">告知ビジュアル</span>
+    {%- endif -%}
+  </div>
+  <div class="b-popup-card__body">
+    {%- if status == 'live' -%}
+      <span class="b-badge b-badge--live" data-popup-status>開催中</span>
+    {%- else -%}
+      <span class="b-badge b-badge--accent" data-popup-status>開催予定</span>
+    {%- endif -%}
+    <h3 class="b-popup-card__title">{{ popup.venue_name.value | escape }}</h3>
+    <p class="b-popup-card__meta">会期：{% render 'b-popup-period', popup: popup, style: 'short' %}</p>
+    {%- if popup.prefecture != blank or popup.address != blank -%}
+      <p class="b-popup-card__meta">
+        {{- popup.prefecture.value | escape -}}
+        {%- if popup.prefecture != blank and popup.address != blank %}・{% endif -%}
+        {{- popup.address.value | escape -}}
+      </p>
+    {%- endif -%}
+  </div>
+  {%- if card_url -%}</a>{%- endif -%}
+</article>

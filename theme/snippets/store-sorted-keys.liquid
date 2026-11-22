@@ -1,0 +1,14 @@
+{%- comment -%}
+  店舗（メタオブジェクト type: retail_store）を「表示順|トップ表示|ハンドル,」の形式で出力する。
+  トップ表示: top / -。capture して split・sort して使う。
+{%- endcomment -%}
+{%- liquid
+  for store in shop.metaobjects.retail_store.values
+    assign order = store.sort_order.value | default: 999 | plus: 10000
+    assign on_top = '-'
+    if store.show_on_top.value == true
+      assign on_top = 'top'
+    endif
+    echo order | append: '|' | append: on_top | append: '|' | append: store.system.handle | append: ','
+  endfor
+-%}

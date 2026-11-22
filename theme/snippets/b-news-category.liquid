@@ -1,0 +1,23 @@
+{%- comment -%}
+  記事のタグのうち、テーマ設定「お知らせ > カテゴリとして扱うタグ」に含まれる最初のものをバッジで表示する。
+  - article: 記事
+{%- endcomment -%}
+{%- liquid
+  assign categories = settings.news_categories | split: ','
+  assign found = ''
+  for tag in article.tags
+    for category in categories
+      assign category_name = category | strip
+      if tag == category_name
+        assign found = tag
+        break
+      endif
+    endfor
+    if found != blank
+      break
+    endif
+  endfor
+-%}
+{%- if found != blank -%}
+  <span class="b-badge b-badge--soft">{{ found | escape }}</span>
+{%- endif -%}

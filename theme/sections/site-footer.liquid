@@ -1,0 +1,63 @@
+{%- capture popup_keys -%}{%- render 'popup-active-keys' -%}{%- endcapture -%}
+{%- liquid
+  assign popup_keys = popup_keys | strip
+  assign has_popup = false
+  if popup_keys != blank
+    assign has_popup = true
+  endif
+  assign popup_keyword = settings.popup_menu_keyword | strip
+-%}
+<footer class="b-footer color-{{ section.settings.color_scheme }} gradient">
+  <div class="b-container">
+    {%- if section.settings.menu.links.size > 0 -%}
+      <nav aria-label="フッターメニュー">
+        <ul class="b-footer__menu">
+          {%- for link in section.settings.menu.links -%}
+            {%- liquid
+              assign is_popup_link = false
+              if link.title == popup_keyword or link.url contains '/pages/popup'
+                assign is_popup_link = true
+              endif
+              if is_popup_link and has_popup == false
+                continue
+              endif
+            -%}
+            <li{% if is_popup_link %} data-popup-only{% endif %}>
+              <a href="{{ link.url }}">{{ link.title | escape }}</a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+    <p class="b-footer__copy">
+      &copy; {{ shop.name | escape }}
+      {%- if settings.brand_operator != blank %} ／ {{ settings.brand_operator | escape }}{% endif -%}
+    </p>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "サイトフッター",
+  "enabled_on": { "groups": ["footer"] },
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "メニュー",
+      "default": "footer",
+      "info": "ショッピングガイド・特定商取引法に基づく表記・プライバシーポリシー・お問い合わせ など"
+    },
+    {
+      "type": "paragraph",
+      "content": "運営者表記は「テーマ設定 > ブランド設定 > フッター」で変更できます。"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "配色",
+      "default": "scheme-4"
+    }
+  ]
+}
+{% endschema %}

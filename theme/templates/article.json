@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-news-article",
+      "settings": {
+        "info_heading": "開催情報",
+        "items_heading": "販売アイテム",
+        "show_price": false,
+        "show_share": true
+      }
+    }
+  },
+  "order": ["main"]
+}

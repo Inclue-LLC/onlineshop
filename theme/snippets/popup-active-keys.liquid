@@ -1,0 +1,35 @@
+{%- comment -%}
+  開催中・開催予定の POP UP（メタオブジェクト type: popup）を
+  「並び順キー|状態|ハンドル,」の形式で出力する。終了日を過ぎたものは出力しない。
+  状態: live（開催中） / upcoming（開催予定）。開催中が先、その中は開始日順。
+
+  使い方:
+    {%- capture popup_keys -%}{%- render 'popup-active-keys' -%}{%- endcapture -%}
+    {%- assign popup_keys = popup_keys | strip | split: ',' | sort -%}
+    {%- for key in popup_keys -%}
+      {%- assign key_parts = key | split: '|' -%}
+      {%- assign popup = shop.metaobjects.popup[key_parts[2]] -%}
+      ... key_parts[1] が状態
+    {%- endfor -%}
+{%- endcomment -%}
+{%- liquid
+  assign today = 'now' | date: '%Y%m%d' | plus: 0
+  for popup in shop.metaobjects.popup.values
+    if popup.start_date == blank
+      continue
+    endif
+    assign start_num = popup.start_date.value | date: '%Y%m%d' | plus: 0
+    assign end_num = start_num
+    if popup.end_date != blank
+      assign end_num = popup.end_date.value | date: '%Y%m%d' | plus: 0
+    endif
+    if end_num < today
+      continue
+    endif
+    if start_num <= today
+      echo '0' | append: start_num | append: '|live|' | append: popup.system.handle | append: ','
+    else
+      echo '1' | append: start_num | append: '|upcoming|' | append: popup.system.handle | append: ','
+    endif
+  endfor
+-%}

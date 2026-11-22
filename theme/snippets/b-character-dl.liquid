@@ -1,0 +1,9 @@
+{%- comment -%}キャラクターのプロフィール表（値があるものだけ表示）。 - character{%- endcomment -%}
+{%- if character.birthday != blank or character.favorite != blank or character.dislikes != blank or character.catchphrase != blank -%}
+  <dl class="b-dl">
+    {%- if character.birthday != blank -%}<div><dt>誕生日</dt><dd>{{ character.birthday.value | escape }}</dd></div>{%- endif -%}
+    {%- if character.favorite != blank -%}<div><dt>すきなもの</dt><dd>{{ character.favorite.value | escape }}</dd></div>{%- endif -%}
+    {%- if character.dislikes != blank -%}<div><dt>にがてなもの</dt><dd>{{ character.dislikes.value | escape }}</dd></div>{%- endif -%}
+    {%- if character.catchphrase != blank -%}<div><dt>くちぐせ</dt><dd>{{ character.catchphrase.value | escape }}</dd></div>{%- endif -%}
+  </dl>
+{%- endif -%}

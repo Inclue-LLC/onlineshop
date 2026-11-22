@@ -1,0 +1,18 @@
+{%- comment -%}
+  セクション見出し（見出し・小見出し・右上リンク）。
+  - heading / subheading / link_label / link_url
+  - tag: 見出しタグ（初期値 h2）
+  - align: 'center' で中央寄せ
+{%- endcomment -%}
+{%- if heading != blank or link_label != blank -%}
+  {%- assign heading_tag = tag | default: 'h2' -%}
+  <div class="b-section-head{% if align == 'center' %} b-section-head--center{% endif %}">
+    <div>
+      {%- if heading != blank -%}<{{ heading_tag }} class="b-title">{{ heading | escape }}</{{ heading_tag }}>{%- endif -%}
+      {%- if subheading != blank -%}<p class="b-subtitle">{{ subheading | escape }}</p>{%- endif -%}
+    </div>
+    {%- if link_label != blank and link_url != blank -%}
+      <a href="{{ link_url }}" class="b-more">{{ link_label | escape }} →</a>
+    {%- endif -%}
+  </div>
+{%- endif -%}

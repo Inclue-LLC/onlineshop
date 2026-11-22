@@ -1,0 +1,17 @@
+{
+  "sections": {
+    "heading": {
+      "type": "page-heading",
+      "settings": { "heading": "", "description": "<p>[キャラクターたちの世界観をひとことで]</p>", "use_page_content": true }
+    },
+    "profiles": {
+      "type": "character-profiles",
+      "settings": {
+        "goods_label": "このキャラクターのグッズを見る",
+        "sub_heading": "なかまたち",
+        "relation_heading": "キャラクター相関図"
+      }
+    }
+  },
+  "order": ["heading", "profiles"]
+}

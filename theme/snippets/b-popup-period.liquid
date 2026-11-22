@@ -1,0 +1,29 @@
+{%- comment -%}
+  POP UP の会期を表示する。
+  - popup: popup メタオブジェクト
+  - style: 'short'（12/01〜12/10） / 'long'（2026.12.01（火）〜 12.10（木））
+{%- endcomment -%}
+{%- liquid
+  assign p_start = popup.start_date.value
+  assign p_end = popup.end_date.value | default: p_start
+  assign same_day = false
+  if p_start == p_end
+    assign same_day = true
+  endif
+-%}
+{%- if style == 'long' -%}
+  {%- render 'b-date', date: p_start, format: 'ymd_w' -%}
+  {%- unless same_day -%}
+    {%- assign start_year = p_start | date: '%Y' -%}
+    {%- assign end_year = p_end | date: '%Y' -%}
+    &nbsp;〜&nbsp;
+    {%- if start_year == end_year -%}
+      {%- render 'b-date', date: p_end, format: 'md_w' -%}
+    {%- else -%}
+      {%- render 'b-date', date: p_end, format: 'ymd_w' -%}
+    {%- endif -%}
+  {%- endunless -%}
+{%- else -%}
+  {%- render 'b-date', date: p_start, format: 'md' -%}
+  {%- unless same_day -%}〜{%- render 'b-date', date: p_end, format: 'md' -%}{%- endunless -%}
+{%- endif -%}

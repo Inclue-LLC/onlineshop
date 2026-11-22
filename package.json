@@ -1,0 +1,18 @@
+{
+  "name": "character-shop-theme",
+  "private": true,
+  "description": "スタジオハヌル／ふにゅ／Lovely MongMong 共通 Shopify テーマ",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "dev": "node scripts/theme.mjs dev",
+    "push": "node scripts/theme.mjs push",
+    "push:initial": "node scripts/theme.mjs push-initial",
+    "pull": "node scripts/theme.mjs pull",
+    "check": "shopify theme check --path theme",
+    "metaobjects": "node scripts/setup-metaobjects.mjs"
+  },
+  "devDependencies": {
+    "@shopify/cli": "^5.0.2"
+  }
+}

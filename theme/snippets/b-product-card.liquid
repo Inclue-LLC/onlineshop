@@ -1,0 +1,51 @@
+{%- comment -%}
+  商品カード（トップ・お知らせ詳細の販売アイテムで使用）。
+  - product: 商品
+  - index: パステル色の番号用（0始まり）
+  - new_tag: このタグが付いた商品に NEW バッジを表示（任意）
+  - show_price: 価格を表示するか（初期値 true）
+  - show_type: 商品タイプを表示するか（初期値 true）
+  - tax_label: 価格の後ろに表示する文字（任意）
+{%- endcomment -%}
+{%- liquid
+  assign pastel = index | default: 0 | modulo: 6 | plus: 1
+  assign is_new = false
+  if new_tag != blank and product.tags contains new_tag
+    assign is_new = true
+  endif
+-%}
+<div class="b-product-card">
+  <a href="{{ product.url | default: '#' }}" class="b-product-card__link">
+    <div class="b-product-card__media" style="--ph-bg: var(--brand-pastel-{{ pastel }});">
+      {%- if product.featured_media -%}
+        {{
+          product.featured_media
+          | image_url: width: 800
+          | image_tag: loading: 'lazy', widths: '300, 400, 600, 800', sizes: '(min-width: 990px) 280px, 50vw', alt: product.featured_media.alt
+        }}
+      {%- else -%}
+        <span class="b-ph__label">商品写真</span>
+      {%- endif -%}
+      {%- if is_new -%}<span class="b-badge b-badge--accent b-product-card__badge">NEW</span>{%- endif -%}
+      {%- if product != blank and product.available == false -%}
+        <span class="b-badge b-badge--dark b-product-card__badge">SOLD OUT</span>
+      {%- endif -%}
+    </div>
+    {%- if show_type != false and product.type != blank -%}
+      <p class="b-product-card__type">{{ product.type | escape }}</p>
+    {%- endif -%}
+    <p class="b-product-card__title">{{ product.title | default: '[商品名]' | escape }}</p>
+    {%- if show_price != false -%}
+      <p class="b-product-card__price">
+        {%- if product.price_varies -%}
+          {{ product.price_min | money }}〜
+        {%- elsif product != blank -%}
+          {{ product.price | money }}
+        {%- else -%}
+          ¥[価格]
+        {%- endif -%}
+        {%- if tax_label != blank %}<small>{{ tax_label }}</small>{% endif -%}
+      </p>
+    {%- endif -%}
+  </a>
+</div>

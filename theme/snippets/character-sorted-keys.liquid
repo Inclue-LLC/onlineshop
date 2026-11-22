@@ -1,0 +1,14 @@
+{%- comment -%}
+  キャラクター（メタオブジェクト type: character）を「表示順|区分|ハンドル,」の形式で出力する。
+  区分: main / sub。capture して split・sort して使う（popup-active-keys と同じ使い方）。
+{%- endcomment -%}
+{%- liquid
+  for character in shop.metaobjects.character.values
+    assign order = character.sort_order.value | default: 999 | plus: 10000
+    assign role = 'sub'
+    if character.role.value == 'メイン'
+      assign role = 'main'
+    endif
+    echo order | append: '|' | append: role | append: '|' | append: character.system.handle | append: ','
+  endfor
+-%}
