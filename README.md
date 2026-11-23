@@ -81,6 +81,7 @@ npm run dev
 ```
 brands/hanul/settings.json   スタジオハヌルの配色などのテーマ設定
 brands/hanul/logo/           ロゴ画像（2509_Logo.ai から書き出した透過 PNG）
+brands/hanul/banners/        ヘッダー画像（banner_pc_2611.ai をサイトの配色に合わせたもの。PC 2400×1000／スマホ 1600×1200）
 ```
 
 配色を非公開テーマに反映する（`.env` の `<KEY>_THEME_ID` のテーマに送る。ロゴなどほかの設定は変わりません）:
