@@ -98,7 +98,7 @@
         "type": "color",
         "id": "brand_live_color",
         "label": "「開催中」バッジ",
-        "default": "#A8705A"
+        "default": "#9A6450"
       },
       {
         "type": "color",

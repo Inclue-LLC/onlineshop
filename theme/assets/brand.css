@@ -11,7 +11,7 @@
 [class*='color-scheme-'] {
   --b-accent: rgb(var(--color-button));
   --b-text: rgb(var(--color-foreground));
-  --b-muted: rgba(var(--color-foreground), 0.68);
+  --b-muted: rgba(var(--color-foreground), 0.8);
 }
 
 :root {

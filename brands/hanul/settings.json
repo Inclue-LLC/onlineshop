@@ -14,9 +14,9 @@
           "background": "#FCF8F3",
           "background_gradient": "",
           "text": "#4E4238",
-          "button": "#7D6E5D",
+          "button": "#6E604F",
           "button_label": "#FFFFFF",
-          "secondary_button_label": "#7D6E5D",
+          "secondary_button_label": "#6E604F",
           "shadow": "#4E4238"
         }
       },
@@ -25,9 +25,9 @@
           "background": "#FFFFFF",
           "background_gradient": "",
           "text": "#4E4238",
-          "button": "#7D6E5D",
+          "button": "#6E604F",
           "button_label": "#FFFFFF",
-          "secondary_button_label": "#7D6E5D",
+          "secondary_button_label": "#6E604F",
           "shadow": "#4E4238"
         }
       },
@@ -58,9 +58,9 @@
           "background": "#F4E1C7",
           "background_gradient": "",
           "text": "#4E4238",
-          "button": "#7D6E5D",
+          "button": "#6E604F",
           "button_label": "#FFFFFF",
-          "secondary_button_label": "#7D6E5D",
+          "secondary_button_label": "#6E604F",
           "shadow": "#4E4238"
         }
       }
@@ -68,7 +68,7 @@
     "brand_font_enable": true,
     "brand_font_family": "M PLUS Rounded 1c",
     "brand_accent_soft": "#F6EBDD",
-    "brand_live_color": "#A8705A",
+    "brand_live_color": "#9A6450",
     "brand_line_color": "#ECE1D4",
     "brand_pastel_1": "#F4E1C7",
     "brand_pastel_2": "#F8E9DC",
