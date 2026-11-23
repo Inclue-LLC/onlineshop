@@ -6,8 +6,9 @@
     assign profile_all = false
   endif
 -%}
-<section class="b-section b-section--top-none b-character-profiles">
+<section class="b-section b-character-profiles">
   <div class="b-container">
+    {%- render 'b-section-head', heading: section.settings.heading, subheading: section.settings.subheading -%}
     {%- assign main_count = 0 -%}
     {%- for key in character_keys -%}
       {%- assign key_parts = key | split: '|' -%}
@@ -124,6 +125,8 @@
   "tag": "div",
   "settings": [
     { "type": "paragraph", "content": "メタオブジェクト「キャラクター」の内容を表示順に表示します。" },
+    { "type": "text", "id": "heading", "label": "見出し", "info": "空欄の場合は表示しません" },
+    { "type": "text", "id": "subheading", "label": "小見出し" },
     {
       "type": "select",
       "id": "layout",

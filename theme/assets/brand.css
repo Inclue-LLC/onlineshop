@@ -1745,6 +1745,6 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
 }
 
 /* ページ見出しの直後のセクションは上余白を詰める */
-.shopify-section:has(> .b-page-heading) + .shopify-section > .b-section {
+.shopify-section:has(> .b-page-heading) + .shopify-section > .b-section:not(.b-about) {
   padding-top: 0;
 }

@@ -2,16 +2,39 @@
   "sections": {
     "heading": {
       "type": "page-heading",
-      "settings": { "heading": "", "description": "<p>[キャラクターたちの世界観をひとことで]</p>", "use_page_content": true }
+      "settings": {
+        "heading": "",
+        "description": "",
+        "use_page_content": false
+      }
+    },
+    "brand": {
+      "type": "brand-about",
+      "settings": {
+        "heading": "スタジオハヌルについて",
+        "subheading": "ABOUT",
+        "text": "<p>[ブランドのコンセプト・世界観の紹介文 3〜4行]</p>",
+        "note": "<p>[コラボ実績などの補足 1〜2行]</p>",
+        "button_label": "",
+        "button_url": "",
+        "color_scheme": "scheme-3"
+      }
     },
     "profiles": {
       "type": "character-profiles",
       "settings": {
+        "heading": "キャラクター紹介",
+        "subheading": "CHARACTERS",
+        "layout": "equal",
         "goods_label": "このキャラクターのグッズを見る",
         "sub_heading": "なかまたち",
         "relation_heading": "キャラクター相関図"
       }
     }
   },
-  "order": ["heading", "profiles"]
+  "order": [
+    "heading",
+    "brand",
+    "profiles"
+  ]
 }
