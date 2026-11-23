@@ -1,0 +1,26 @@
+{%- comment -%}
+  並べるキャラクターのイラストの高さ（px）の最大値を出力する。capture して数値として使う。
+  - keys: character-sorted-keys を split・sort した配列
+  - limit: 何件目までを対象にするか（省略時は全件）
+{%- endcomment -%}
+{%- liquid
+  assign max_h = 0
+  assign count = 0
+  for key in keys
+    if limit and count >= limit
+      break
+    endif
+    assign key_parts = key | split: '|'
+    assign c = shop.metaobjects.character[key_parts[2]]
+    unless c
+      continue
+    endunless
+    assign count = count | plus: 1
+    assign ill = c.illustration.value
+    assign h = ill.height | default: ill.preview_image.height | default: 0
+    if h > max_h
+      assign max_h = h
+    endif
+  endfor
+  echo max_h
+-%}

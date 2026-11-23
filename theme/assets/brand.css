@@ -1072,7 +1072,7 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
   min-height: 32rem;
 }
 
-.b-split__media img {
+.b-split__media img:not(.b-illust__img) {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1222,6 +1222,47 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
   border-radius: var(--brand-radius);
 }
 
+/* キャラクターのイラスト：枠の内側に余白を取り、足元を揃える。
+   --ill-scale（0〜1）でキャラクター同士の大きさの比率を表す */
+.b-illust {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--ill-pad, 12%);
+  pointer-events: none;
+}
+
+.b-illust__img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: calc(var(--ill-scale, 1) * 100%);
+  object-fit: contain;
+  object-position: center bottom;
+  transition: transform 0.4s;
+  transform-origin: center bottom;
+}
+
+.b-chara-card__media,
+.b-split--profile .b-split__media {
+  position: relative;
+}
+
+.b-split--profile .b-split__media {
+  --ill-pad: 10%;
+  aspect-ratio: 1;
+  min-height: 0;
+}
+
+@media screen and (min-width: 750px) {
+  .b-split--profile .b-split__media {
+    aspect-ratio: auto;
+    min-height: 40rem;
+  }
+}
+
 /* キャラクターカード（すべて同じ大きさで並べる） */
 .b-chara-card__link {
   display: block;
@@ -1238,14 +1279,7 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
   overflow: hidden;
 }
 
-.b-chara-card__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transition: transform 0.4s;
-}
-
-.b-chara-card__link:hover .b-chara-card__media img {
+.b-chara-card__link:hover .b-illust__img {
   transform: scale(1.04);
 }
 

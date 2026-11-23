@@ -201,6 +201,22 @@
           ]
         },
         {
+          "key": "illustration_scale",
+          "name": "イラストの表示サイズ（%）",
+          "type": "number_integer",
+          "description": "通常は空欄（画像の高さの比率で自動調整）。手動で変えたいときだけ 10〜100 を入力。いちばん大きいキャラクターが 100。",
+          "validations": [
+            {
+              "name": "min",
+              "value": "10"
+            },
+            {
+              "name": "max",
+              "value": "100"
+            }
+          ]
+        },
+        {
           "key": "description",
           "name": "紹介文",
           "type": "multi_line_text_field"

@@ -9,6 +9,8 @@
 <section class="b-section b-character-profiles">
   <div class="b-container">
     {%- render 'b-section-head', heading: section.settings.heading, subheading: section.settings.subheading -%}
+    {%- capture ill_max_h -%}{%- render 'character-illust-max-height', keys: character_keys -%}{%- endcapture -%}
+    {%- assign ill_max_h = ill_max_h | strip | plus: 0 -%}
     {%- assign main_count = 0 -%}
     {%- for key in character_keys -%}
       {%- assign key_parts = key | split: '|' -%}
@@ -24,11 +26,13 @@
       >
         <div class="b-split__media" style="--ph-bg: {% if character.theme_color != blank %}{{ character.theme_color.value }}{% else %}var(--brand-pastel-{{ pastel }}){% endif %};">
           {%- if character.illustration.value != blank -%}
-            {{
-              character.illustration.value
-              | image_url: width: 1400
-              | image_tag: loading: 'eager', widths: '500, 800, 1100, 1400', sizes: '(min-width: 990px) 600px, 100vw', alt: character.name.value
-            }}
+            {%- render 'b-chara-illust',
+              character: character,
+              max_h: ill_max_h,
+              width: 1200,
+              loading: 'eager',
+              sizes: '(min-width: 990px) 600px, 100vw'
+            -%}
           {%- else -%}
             <span class="b-ph__label">全身イラスト</span>
           {%- endif -%}

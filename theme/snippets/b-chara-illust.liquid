@@ -1,0 +1,33 @@
+{%- comment -%}
+  キャラクターのイラスト（枠の内側に余白を取り、足元を揃えて表示）。
+  - character: character メタオブジェクト
+  - max_h: 一緒に並べるキャラクターのイラストの高さ（px）の最大値。これを 100% として大きさを揃える
+  - width: 読み込む画像の幅（初期値 900）
+  - sizes: image_tag の sizes
+  - loading: 'lazy' / 'eager'
+
+  大きさ：アップロードした画像の高さの比率（例：ポポの画像がパムの 70% の高さなら 70% で表示）。
+  キャラクターの「イラストの表示サイズ（%）」が入力されていれば、そちらを優先する。
+{%- endcomment -%}
+{%- liquid
+  assign ill = character.illustration.value
+  assign ill_h = ill.height | default: ill.preview_image.height | default: 0
+  assign scale_pct = 100
+  if max_h > 0 and ill_h > 0
+    assign scale_pct = ill_h | times: 100 | divided_by: max_h
+  endif
+  if character.illustration_scale != blank
+    assign scale_pct = character.illustration_scale.value
+  endif
+  assign scale_pct = scale_pct | at_least: 10 | at_most: 100
+  assign scale = scale_pct | divided_by: 100.0
+  assign img_width = width | default: 900
+  assign img_loading = loading | default: 'lazy'
+-%}
+<div class="b-illust" style="--ill-scale: {{ scale }};">
+  {{
+    ill
+    | image_url: width: img_width
+    | image_tag: class: 'b-illust__img', loading: img_loading, widths: '300, 450, 600, 900, 1200', sizes: sizes, alt: character.name.value
+  }}
+</div>
