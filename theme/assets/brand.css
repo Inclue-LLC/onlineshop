@@ -1200,28 +1200,6 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
   color: var(--b-muted);
 }
 
-.b-relation {
-  margin-top: 5.6rem;
-  padding: 2.4rem;
-}
-
-@media screen and (min-width: 750px) {
-  .b-relation {
-    padding: 3.2rem;
-  }
-}
-
-.b-relation .b-ph {
-  min-height: 32rem;
-}
-
-.b-relation__img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: var(--brand-radius);
-}
-
 /* キャラクターのイラスト：枠の内側に余白を取り、足元を揃える。
    --ill-scale（0〜1）でキャラクター同士の大きさの比率を表す */
 .b-illust {

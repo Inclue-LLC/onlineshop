@@ -113,20 +113,6 @@
       </div>
     {%- endif -%}
 
-    {%- if section.settings.relation_image != blank or request.design_mode -%}
-      <div class="b-card b-relation">
-        <h2 class="b-title b-title--small">{{ section.settings.relation_heading | escape }}</h2>
-        {%- if section.settings.relation_image != blank -%}
-          {{
-            section.settings.relation_image
-            | image_url: width: 1800
-            | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1800', sizes: '(min-width: 1240px) 1150px, 100vw', class: 'b-relation__img'
-          }}
-        {%- else -%}
-          {%- render 'b-placeholder', label: '相関図イラスト（任意・画像を設定すると表示されます）', color: 1, dashed: true -%}
-        {%- endif -%}
-      </div>
-    {%- endif -%}
   </div>
 </section>
 
@@ -177,18 +163,6 @@
       "id": "sub_heading",
       "label": "サブキャラクターの見出し",
       "default": "なかまたち"
-    },
-    {
-      "type": "text",
-      "id": "relation_heading",
-      "label": "相関図の見出し",
-      "default": "キャラクター相関図"
-    },
-    {
-      "type": "image_picker",
-      "id": "relation_image",
-      "label": "相関図の画像（任意）",
-      "info": "未設定の場合、相関図は表示されません。"
     }
   ],
   "presets": [
