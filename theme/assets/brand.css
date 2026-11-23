@@ -35,6 +35,11 @@ body {
   letter-spacing: 0.02em;
 }
 
+/* Dawn は配色ごとの文字を不透明度75%にしているため、100%で表示する */
+[class*='color-scheme-'] {
+  color: rgb(var(--color-foreground));
+}
+
 h1,
 h2,
 h3,
@@ -271,7 +276,7 @@ h3,
 
 .b-btn--outline {
   background: #fff;
-  color: var(--b-accent);
+  color: rgb(var(--color-foreground));
   border-color: var(--brand-line);
 }
 
@@ -578,6 +583,12 @@ h3,
 
 .b-header__shop {
   display: none;
+}
+
+/* ショップボタンの文字は白 */
+.b-header__shop,
+.b-header__drawer-panel .b-btn {
+  color: #ffffff;
 }
 
 @media screen and (min-width: 990px) {
@@ -1305,7 +1316,6 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
 
 .b-about .b-subtitle {
   color: inherit;
-  opacity: 0.8;
 }
 
 .b-about__text {
@@ -1314,7 +1324,6 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
 
 .b-about__note {
   font-size: 1.3rem;
-  opacity: 0.85;
 }
 
 .b-about .rte p {
@@ -1335,6 +1344,9 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
 
 .b-about .b-btn--outline {
   margin-top: 2rem;
+  background: transparent;
+  color: inherit;
+  border-color: currentColor;
 }
 
 /* ---------- Stores ---------- */
