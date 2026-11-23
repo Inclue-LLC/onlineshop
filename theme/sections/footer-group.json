@@ -6,9 +6,11 @@
       "type": "site-footer",
       "settings": {
         "menu": "footer",
-        "color_scheme": "scheme-4"
+        "color_scheme": "scheme-3"
       }
     }
   },
-  "order": ["site-footer"]
+  "order": [
+    "site-footer"
+  ]
 }
