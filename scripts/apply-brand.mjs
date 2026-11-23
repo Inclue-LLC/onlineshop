@@ -8,7 +8,9 @@
  * 1. ストアのテーマ（<KEY>_THEME_ID）から config/settings_data.json を取得
  * 2. brands/<store>/settings.json の "settings" に書かれた項目だけを書き換える
  *    （ロゴ・テーマエディタで設定したその他の項目はそのまま残す）
- * 3. config/settings_data.json だけをテーマに送る
+ *    "templates" があれば、templates/<名前>.json の該当セクション（種類で指定）の設定も書き換える
+ *      例: "templates": { "index": { "product-showcase": { "show_all": true } } }
+ * 3. 書き換えたファイルだけをテーマに送る
  *
  * 公開中のテーマには送らない（Shopify CLI が確認を求める）。対象テーマは .env の <KEY>_THEME_ID。
  */
@@ -49,7 +51,9 @@ function describe(value) {
 async function run(cfg) {
   const brandFile = resolve(ROOT, 'brands', cfg.key, 'settings.json');
   if (!existsSync(brandFile)) throw new Error(`${brandFile} がありません`);
-  const brand = JSON.parse(readFileSync(brandFile, 'utf8')).settings || {};
+  const brandJson = JSON.parse(readFileSync(brandFile, 'utf8'));
+  const brand = brandJson.settings || {};
+  const templates = brandJson.templates || {};
   if (!cfg.themeId) throw new Error(`.env に ${cfg.key.toUpperCase()}_THEME_ID を設定してください（反映先のテーマID）`);
 
   console.log(`\n■ ${cfg.key}（${cfg.store} / テーマ #${cfg.themeId}）${dryRun ? ' [dry-run]' : ''}`);
@@ -57,7 +61,10 @@ async function run(cfg) {
   const work = mkdtempSync(join(tmpdir(), 'brand-'));
   try {
     mkdirSync(join(work, 'config'), { recursive: true });
-    shopify(cfg, ['pull', '--path', work, '--theme', cfg.themeId, '--only', 'config/settings_data.json', '--nodelete']);
+    const templateFiles = Object.keys(templates).map((name) => `templates/${name}.json`);
+    const onlyArgs = ['config/settings_data.json', ...templateFiles].flatMap((f) => ['--only', f]);
+    mkdirSync(join(work, 'templates'), { recursive: true });
+    shopify(cfg, ['pull', '--path', work, '--theme', cfg.themeId, ...onlyArgs, '--nodelete']);
     const file = join(work, 'config', 'settings_data.json');
     if (!existsSync(file)) throw new Error('テーマから config/settings_data.json を取得できませんでした');
     const data = parseSettingsData(readFileSync(file, 'utf8'));
@@ -86,6 +93,41 @@ async function run(cfg) {
       }
     }
 
+    const changedFiles = [];
+    if (changes.length) changedFiles.push('config/settings_data.json');
+
+    // ページのセクション設定（templates/*.json）
+    const templateData = {};
+    for (const [name, byType] of Object.entries(templates)) {
+      const rel = `templates/${name}.json`;
+      const tfile = join(work, rel);
+      if (!existsSync(tfile)) {
+        console.log(`  ! ${rel} がテーマにありません（スキップ）`);
+        continue;
+      }
+      const tpl = parseSettingsData(readFileSync(tfile, 'utf8'));
+      let touched = false;
+      for (const [type, values] of Object.entries(byType)) {
+        const ids = Object.keys(tpl.sections || {}).filter((id) => tpl.sections[id].type === type);
+        if (!ids.length) console.log(`  ! ${rel} に「${type}」セクションがありません（スキップ）`);
+        for (const id of ids) {
+          const sec = tpl.sections[id];
+          sec.settings ||= {};
+          for (const [k, v] of Object.entries(values)) {
+            if (describe(sec.settings[k]) !== describe(v)) {
+              changes.push(`${rel}（${type}）${k}: ${sec.settings[k] ?? '（未設定）'} → ${describe(v)}`);
+              sec.settings[k] = v;
+              touched = true;
+            }
+          }
+        }
+      }
+      if (touched) {
+        templateData[tfile] = tpl;
+        changedFiles.push(rel);
+      }
+    }
+
     if (!changes.length) {
       console.log('  = 変更はありません');
       return;
@@ -93,8 +135,9 @@ async function run(cfg) {
     changes.forEach((c) => console.log(`  ~ ${c}`));
     if (dryRun) return;
 
-    writeFileSync(file, `${JSON.stringify(data, null, 2)}\n`);
-    shopify(cfg, ['push', '--path', work, '--theme', cfg.themeId, '--only', 'config/settings_data.json', '--nodelete']);
+    if (changedFiles.includes('config/settings_data.json')) writeFileSync(file, `${JSON.stringify(data, null, 2)}\n`);
+    for (const [tfile, tpl] of Object.entries(templateData)) writeFileSync(tfile, `${JSON.stringify(tpl, null, 2)}\n`);
+    shopify(cfg, ['push', '--path', work, '--theme', cfg.themeId, ...changedFiles.flatMap((f) => ['--only', f]), '--nodelete']);
     console.log(`  ✔ ${changes.length} 項目を反映しました`);
   } finally {
     rmSync(work, { recursive: true, force: true });

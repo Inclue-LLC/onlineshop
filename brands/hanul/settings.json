@@ -1,5 +1,5 @@
 {
-  "$comment": "スタジオハヌルのテーマ設定（配色など）。ロゴデータ（2509_Logo.ai）の色をもとに、文字・ボタンは読みやすい濃さに調整。node scripts/apply-brand.mjs hanul でストアのテーマに反映する。",
+  "$comment": "スタジオハヌルのテーマ設定（配色など）。ロゴデータ（2509_Logo.ai）の色をもとに、文字・ボタンは読みやすい濃さに調整。node scripts/apply-brand.mjs hanul でストアのテーマに反映する。 \"templates\" はページのセクション設定（セクションの種類ごと）。",
   "palette": {
     "logo_brown": "#978A79",
     "caramel": "#D4B29A",
@@ -76,5 +76,12 @@
     "brand_pastel_4": "#EFE3D3",
     "brand_pastel_5": "#F3ECE4",
     "brand_pastel_6": "#E9D9C6"
+  },
+  "templates": {
+    "index": {
+      "product-showcase": {
+        "show_all": true
+      }
+    }
   }
 }

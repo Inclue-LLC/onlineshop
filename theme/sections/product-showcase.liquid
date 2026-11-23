@@ -1,18 +1,30 @@
 {%- liquid
   assign source = section.settings.collection
+  if source == blank
+    assign source = collections.all
+  endif
   assign more_url = section.settings.more_url | default: source.url | default: routes.all_products_collection_url
+  assign more_label = section.settings.more_label
+  assign product_limit = section.settings.limit
+  if section.settings.show_all
+    comment
+      すべての商品を表示するときは「すべての商品を見る」リンクを出さない
+    endcomment
+    assign product_limit = 50
+    assign more_label = ''
+  endif
 -%}
 <section class="b-section b-product-showcase">
   <div class="b-container">
     {%- render 'b-section-head',
       heading: section.settings.heading,
       subheading: section.settings.subheading,
-      link_label: section.settings.more_label,
+      link_label: more_label,
       link_url: more_url
     -%}
     <div class="b-grid b-grid--4 b-grid--sp-2">
       {%- if source != blank and source.products_count > 0 -%}
-        {%- for product in source.products limit: section.settings.limit -%}
+        {%- for product in source.products limit: product_limit -%}
           {%- render 'b-product-card',
             product: product,
             index: forloop.index0,
@@ -36,8 +48,9 @@
   "settings": [
     { "type": "text", "id": "heading", "label": "見出し", "default": "オンラインショップ" },
     { "type": "text", "id": "subheading", "label": "小見出し", "default": "新着・おすすめアイテム" },
-    { "type": "collection", "id": "collection", "label": "表示するコレクション", "info": "例：新着・おすすめ をまとめたコレクション" },
-    { "type": "range", "id": "limit", "label": "表示件数", "min": 2, "max": 12, "step": 1, "default": 4 },
+    { "type": "collection", "id": "collection", "label": "表示するコレクション", "info": "例：新着・おすすめ をまとめたコレクション。未選択の場合はすべての商品" },
+    { "type": "checkbox", "id": "show_all", "label": "コレクションの商品をすべて表示する（最大50件）", "default": false, "info": "オンにすると「すべての商品を見る」リンクは表示されません。商品数が少ないストア向け。" },
+    { "type": "range", "id": "limit", "label": "表示件数（すべて表示しないとき）", "min": 2, "max": 12, "step": 1, "default": 4 },
     { "type": "text", "id": "new_tag", "label": "NEW バッジを付けるタグ", "default": "NEW" },
     { "type": "text", "id": "tax_label", "label": "価格の後ろの表記", "default": "（税込）" },
     { "type": "text", "id": "more_label", "label": "右上リンクの文字", "default": "すべての商品を見る" },
