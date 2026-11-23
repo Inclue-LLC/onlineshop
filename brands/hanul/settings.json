@@ -83,7 +83,9 @@
         "show_all": true
       },
       "hero-slider": {
-        "slideshow": false
+        "slideshow": false,
+        "ratio_desktop": "auto",
+        "ratio_mobile": "auto"
       }
     }
   }

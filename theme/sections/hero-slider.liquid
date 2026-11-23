@@ -8,7 +8,7 @@
     assign slide_count = 1
   endif
 -%}
-<section class="b-hero b-section b-section--tight" style="--hero-ratio: {{ section.settings.ratio_desktop }}; --hero-ratio-mobile: {{ section.settings.ratio_mobile }};">
+<section class="b-hero b-section b-section--tight">
   <div class="b-container">
     <b-slider
       class="b-slider"
@@ -19,8 +19,22 @@
     >
       <ul class="b-slider__track" data-slider-track>
         {%- for block in section.blocks limit: slide_count -%}
+          {%- liquid
+            comment
+              縦横比。「画像に合わせる（auto）」のときは、アップロードした画像の比率をそのまま使う（切り取らない）
+            endcomment
+            assign ratio_pc = section.settings.ratio_desktop
+            if ratio_pc == 'auto'
+              assign ratio_pc = block.settings.image.aspect_ratio | default: 2.4
+            endif
+            assign ratio_sp = section.settings.ratio_mobile
+            if ratio_sp == 'auto'
+              assign ratio_sp = block.settings.image_mobile.aspect_ratio | default: block.settings.image.aspect_ratio | default: 1.25
+            endif
+          -%}
           <li
             class="b-slider__slide"
+            style="--hero-ratio: {{ ratio_pc }}; --hero-ratio-mobile: {{ ratio_sp }};"
             id="Slide-{{ section.id }}-{{ forloop.index }}"
             aria-roledescription="slide"
             aria-label="{{ forloop.index }} / {{ slide_count }}"
@@ -92,32 +106,90 @@
   "name": "ヘッダー画像",
   "tag": "div",
   "settings": [
-    { "type": "text", "id": "label", "label": "スライドの名前（読み上げ用）", "default": "メインビジュアル" },
-    { "type": "checkbox", "id": "slideshow", "label": "スライドにする（複数枚を切り替える）", "default": true, "info": "オフにすると1枚目の画像だけを固定で表示します。" },
-    { "type": "checkbox", "id": "autoplay", "label": "自動で切り替える（スライドのとき）", "default": true },
-    { "type": "range", "id": "interval", "label": "切り替え間隔", "min": 3, "max": 10, "step": 1, "unit": "秒", "default": 5 },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "スライドの名前（読み上げ用）",
+      "default": "メインビジュアル"
+    },
+    {
+      "type": "checkbox",
+      "id": "slideshow",
+      "label": "スライドにする（複数枚を切り替える）",
+      "default": true,
+      "info": "オフにすると1枚目の画像だけを固定で表示します。"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "自動で切り替える（スライドのとき）",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "interval",
+      "label": "切り替え間隔",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "秒",
+      "default": 5
+    },
     {
       "type": "select",
       "id": "ratio_desktop",
       "label": "PCの縦横比",
-      "default": "2.4",
+      "default": "auto",
       "options": [
-        { "value": "2.4", "label": "2400×1000（12:5）" },
-        { "value": "2", "label": "2:1" },
-        { "value": "1.7778", "label": "16:9" },
-        { "value": "3", "label": "3:1" }
-      ]
+        {
+          "value": "auto",
+          "label": "画像に合わせる（切り取らない）"
+        },
+        {
+          "value": "2.4",
+          "label": "2400×1000（12:5）"
+        },
+        {
+          "value": "2",
+          "label": "2:1"
+        },
+        {
+          "value": "1.7778",
+          "label": "16:9"
+        },
+        {
+          "value": "3",
+          "label": "3:1"
+        }
+      ],
+      "info": "「画像に合わせる」以外は、枠に合わせて画像の端が切り取られます。"
     },
     {
       "type": "select",
       "id": "ratio_mobile",
       "label": "スマホの縦横比",
-      "default": "1.25",
+      "default": "auto",
       "options": [
-        { "value": "2.4", "label": "PCと同じ（12:5）" },
-        { "value": "1.25", "label": "5:4" },
-        { "value": "1", "label": "1:1" },
-        { "value": "0.8", "label": "4:5" }
+        {
+          "value": "auto",
+          "label": "画像に合わせる（切り取らない）"
+        },
+        {
+          "value": "1.25",
+          "label": "5:4"
+        },
+        {
+          "value": "1",
+          "label": "1:1"
+        },
+        {
+          "value": "0.8",
+          "label": "4:5"
+        },
+        {
+          "value": "2.4",
+          "label": "12:5"
+        }
       ]
     }
   ],
@@ -126,10 +198,28 @@
       "type": "slide",
       "name": "スライド",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "画像（PC）", "info": "推奨 2400×1000px" },
-        { "type": "image_picker", "id": "image_mobile", "label": "画像（スマホ・任意）", "info": "推奨 1100×880px" },
-        { "type": "text", "id": "alt", "label": "代替テキスト" },
-        { "type": "url", "id": "link", "label": "リンク先" }
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "画像（PC）",
+          "info": "推奨 2400×1000px など横長"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "画像（スマホ）",
+          "info": "未設定の場合はPCの画像を表示。推奨 1080×1350px など縦長も可"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "代替テキスト"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "リンク先"
+        }
       ]
     }
   ],
@@ -137,7 +227,17 @@
   "presets": [
     {
       "name": "ヘッダー画像",
-      "blocks": [{ "type": "slide" }, { "type": "slide" }, { "type": "slide" }]
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
     }
   ]
 }
