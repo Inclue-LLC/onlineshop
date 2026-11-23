@@ -1,4 +1,11 @@
-{%- capture character_keys -%}{%- render 'character-sorted-keys' -%}{%- endcapture -%}
+{%- comment -%}
+  並び順：テーマエディタで「キャラクター」ブロックを追加していればその順番（ドラッグで並び替え可）、
+  無ければキャラクターの「表示順」の数字の順。
+{%- endcomment -%}
+{%- capture character_keys -%}{%- render 'character-block-keys', blocks: section.blocks -%}{%- endcapture -%}
+{%- if character_keys == blank -%}
+  {%- capture character_keys -%}{%- render 'character-sorted-keys' -%}{%- endcapture -%}
+{%- endif -%}
 {%- assign character_keys = character_keys | strip | split: ',' | sort -%}
 {%- liquid
   assign profile_all = true
@@ -128,24 +135,81 @@
   "name": "キャラクタープロフィール",
   "tag": "div",
   "settings": [
-    { "type": "paragraph", "content": "メタオブジェクト「キャラクター」の内容を表示順に表示します。" },
-    { "type": "text", "id": "heading", "label": "見出し", "info": "空欄の場合は表示しません" },
-    { "type": "text", "id": "subheading", "label": "小見出し" },
+    {
+      "type": "paragraph",
+      "content": "メタオブジェクト「キャラクター」の内容を表示順に表示します。並び順を変えたいときは、下の「ブロックを追加」から「キャラクター」を追加してキャラクターを選び、ドラッグで並べ替えてください（ブロックが無いときは「表示順」の数字の順）。"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "見出し",
+      "info": "空欄の場合は表示しません"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "小見出し"
+    },
     {
       "type": "select",
       "id": "layout",
       "label": "並べ方",
       "default": "equal",
       "options": [
-        { "value": "equal", "label": "全員を同じ大きさのプロフィールで並べる" },
-        { "value": "main_sub", "label": "メイン（大きなプロフィール）＋サブ（なかまたち）" }
+        {
+          "value": "equal",
+          "label": "全員を同じ大きさのプロフィールで並べる"
+        },
+        {
+          "value": "main_sub",
+          "label": "メイン（大きなプロフィール）＋サブ（なかまたち）"
+        }
       ]
     },
-    { "type": "text", "id": "goods_label", "label": "グッズボタンの文字", "default": "このキャラクターのグッズを見る" },
-    { "type": "text", "id": "sub_heading", "label": "サブキャラクターの見出し", "default": "なかまたち" },
-    { "type": "text", "id": "relation_heading", "label": "相関図の見出し", "default": "キャラクター相関図" },
-    { "type": "image_picker", "id": "relation_image", "label": "相関図の画像（任意）", "info": "未設定の場合、相関図は表示されません。" }
+    {
+      "type": "text",
+      "id": "goods_label",
+      "label": "グッズボタンの文字",
+      "default": "このキャラクターのグッズを見る"
+    },
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "サブキャラクターの見出し",
+      "default": "なかまたち"
+    },
+    {
+      "type": "text",
+      "id": "relation_heading",
+      "label": "相関図の見出し",
+      "default": "キャラクター相関図"
+    },
+    {
+      "type": "image_picker",
+      "id": "relation_image",
+      "label": "相関図の画像（任意）",
+      "info": "未設定の場合、相関図は表示されません。"
+    }
   ],
-  "presets": [{ "name": "キャラクタープロフィール" }]
+  "presets": [
+    {
+      "name": "キャラクタープロフィール"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "character",
+      "name": "キャラクター",
+      "settings": [
+        {
+          "type": "metaobject",
+          "id": "character",
+          "label": "キャラクター",
+          "metaobject_type": "character"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 24
 }
 {% endschema %}

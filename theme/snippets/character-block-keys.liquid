@@ -1,0 +1,22 @@
+{%- comment -%}
+  セクションに「キャラクター」ブロックがあるとき、その並び順で
+  character-sorted-keys と同じ形式（「順番|区分|ハンドル,」）を出力する。
+  - blocks: section.blocks
+{%- endcomment -%}
+{%- liquid
+  for block in blocks
+    if block.type != 'character'
+      continue
+    endif
+    assign c = block.settings.character
+    unless c
+      continue
+    endunless
+    assign order = forloop.index | plus: 10000
+    assign role = 'sub'
+    if c.role.value == 'メイン'
+      assign role = 'main'
+    endif
+    echo order | append: '|' | append: role | append: '|' | append: c.system.handle | append: ','
+  endfor
+-%}

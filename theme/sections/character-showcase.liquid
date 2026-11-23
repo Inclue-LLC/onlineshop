@@ -1,5 +1,12 @@
 {%- assign page_url = section.settings.page_url | default: '/pages/characters' -%}
-{%- capture character_keys -%}{%- render 'character-sorted-keys' -%}{%- endcapture -%}
+{%- comment -%}
+  並び順：テーマエディタで「キャラクター」ブロックを追加していればその順番（ドラッグで並び替え可）、
+  無ければキャラクターの「表示順」の数字の順。
+{%- endcomment -%}
+{%- capture character_keys -%}{%- render 'character-block-keys', blocks: section.blocks -%}{%- endcapture -%}
+{%- if character_keys == blank -%}
+  {%- capture character_keys -%}{%- render 'character-sorted-keys' -%}{%- endcapture -%}
+{%- endif -%}
 {%- liquid
   assign character_keys = character_keys | strip | split: ',' | sort
   assign main_character = nil
@@ -141,24 +148,88 @@
   "name": "キャラクター紹介（簡易）",
   "tag": "div",
   "settings": [
-    { "type": "paragraph", "content": "キャラクターはメタオブジェクト「キャラクター」で管理し、表示順に並びます。" },
+    {
+      "type": "paragraph",
+      "content": "キャラクターはメタオブジェクト「キャラクター」で管理し、表示順に並びます。並び順を変えたいときは、下の「ブロックを追加」から「キャラクター」を追加してキャラクターを選び、ドラッグで並べ替えてください（ブロックが無いときは「表示順」の数字の順）。"
+    },
     {
       "type": "select",
       "id": "layout",
       "label": "並べ方",
       "default": "equal",
       "options": [
-        { "value": "equal", "label": "すべて同じ大きさで並べる" },
-        { "value": "main_sub", "label": "メイン（大きく）＋サブ" }
+        {
+          "value": "equal",
+          "label": "すべて同じ大きさで並べる"
+        },
+        {
+          "value": "main_sub",
+          "label": "メイン（大きく）＋サブ"
+        }
       ]
     },
-    { "type": "range", "id": "limit", "label": "表示する数（同じ大きさで並べるとき）", "min": 1, "max": 12, "step": 1, "default": 3 },
-    { "type": "text", "id": "heading", "label": "見出し", "default": "キャラクター" },
-    { "type": "text", "id": "subheading", "label": "小見出し", "default": "CHARACTERS" },
-    { "type": "range", "id": "sub_limit", "label": "サブキャラクターの表示数（メイン＋サブのとき）", "min": 0, "max": 12, "step": 1, "default": 4 },
-    { "type": "url", "id": "page_url", "label": "キャラクター紹介ページ", "info": "未設定の場合は /pages/characters" },
-    { "type": "text", "id": "button_label", "label": "ボタンの文字", "default": "キャラクター紹介ページへ" }
+    {
+      "type": "range",
+      "id": "limit",
+      "label": "表示する数（同じ大きさで並べるとき）",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "見出し",
+      "default": "キャラクター"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "小見出し",
+      "default": "CHARACTERS"
+    },
+    {
+      "type": "range",
+      "id": "sub_limit",
+      "label": "サブキャラクターの表示数（メイン＋サブのとき）",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "url",
+      "id": "page_url",
+      "label": "キャラクター紹介ページ",
+      "info": "未設定の場合は /pages/characters"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "ボタンの文字",
+      "default": "キャラクター紹介ページへ"
+    }
   ],
-  "presets": [{ "name": "キャラクター紹介（簡易）" }]
+  "presets": [
+    {
+      "name": "キャラクター紹介（簡易）"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "character",
+      "name": "キャラクター",
+      "settings": [
+        {
+          "type": "metaobject",
+          "id": "character",
+          "label": "キャラクター",
+          "metaobject_type": "character"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 24
 }
 {% endschema %}
