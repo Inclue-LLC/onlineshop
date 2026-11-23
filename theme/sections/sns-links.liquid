@@ -4,10 +4,38 @@
       <h2 class="b-title b-title--small b-center">{{ section.settings.heading | default: shop.name | escape }}{{ section.settings.heading_suffix | escape }}</h2>
       <ul class="b-sns__list">
         {%- for block in section.blocks -%}
+          {%- liquid
+            assign sns_style = block.settings.style
+            if sns_style == 'dark'
+              comment
+                「自動」：ボタン名とリンク先から SNS を判別して、その SNS の色にする
+              endcomment
+              assign sns_key = block.settings.label | append: ' ' | append: block.settings.url | downcase
+              assign sns_head = block.settings.label | strip | downcase | slice: 0, 4
+              if sns_key contains 'instagram'
+                assign sns_style = 'instagram'
+              elsif sns_key contains 'tiktok'
+                assign sns_style = 'tiktok'
+              elsif sns_key contains 'youtube' or sns_key contains 'youtu.be'
+                assign sns_style = 'youtube'
+              elsif sns_key contains 'line.me' or sns_key contains 'lin.ee' or sns_head == 'line'
+                assign sns_style = 'line'
+              elsif sns_key contains 'twitter' or sns_key contains 'x.com'
+                assign sns_style = 'x'
+              else
+                assign sns_label = block.settings.label | strip | downcase
+                if sns_label == 'x' or sns_label contains 'x（' or sns_label contains 'x ('
+                  assign sns_style = 'x'
+                endif
+              endif
+            elsif sns_style == 'solid_dark'
+              assign sns_style = 'dark'
+            endif
+          -%}
           <li {{ block.shopify_attributes }}>
             <a
               href="{{ block.settings.url | default: '#' }}"
-              class="b-sns__btn b-sns__btn--{{ block.settings.style }}"
+              class="b-sns__btn b-sns__btn--{{ sns_style }}"
               target="_blank"
               rel="noopener"
             >
@@ -42,9 +70,15 @@
           "id": "style",
           "label": "ボタンの色",
           "default": "dark",
+          "info": "「自動」はボタン名・リンク先から X／Instagram／TikTok／YouTube／LINE を判別して、そのSNSの色にします。",
           "options": [
+            { "value": "dark", "label": "自動（各SNSの色・該当なしはダーク）" },
             { "value": "line", "label": "LINE（緑）" },
-            { "value": "dark", "label": "ダーク" },
+            { "value": "x", "label": "X（黒）" },
+            { "value": "instagram", "label": "Instagram（グラデーション）" },
+            { "value": "tiktok", "label": "TikTok（黒）" },
+            { "value": "youtube", "label": "YouTube（赤）" },
+            { "value": "solid_dark", "label": "ダーク（固定）" },
             { "value": "accent", "label": "アクセントカラー" },
             { "value": "outline", "label": "白（枠線）" }
           ]

@@ -1448,6 +1448,32 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
   color: #fff;
 }
 
+/* 各SNSのイメージ色 */
+.b-sns__btn--x {
+  background: #000000;
+  color: #ffffff;
+}
+
+.b-sns__btn--instagram {
+  border: 0;
+  background: linear-gradient(45deg, #f58529 0%, #dd2a7b 45%, #8134af 75%, #515bd4 100%);
+  color: #ffffff;
+}
+
+.b-sns__btn--tiktok {
+  background: #000000;
+  color: #ffffff;
+}
+
+.b-sns__btn--tiktok .b-sns__label {
+  text-shadow: -1.5px -1px 0 #25f4ee, 1.5px 1px 0 #fe2c55;
+}
+
+.b-sns__btn--youtube {
+  background: #ff0000;
+  color: #ffffff;
+}
+
 .b-sns__btn--accent {
   background: var(--b-accent);
   color: rgb(var(--color-button-text));
@@ -1468,6 +1494,16 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
 .b-sns__sub {
   font-size: 1.1rem;
   opacity: 0.85;
+}
+
+@media screen and (max-width: 749px) {
+  .b-sns__btn {
+    padding: 0.8rem 0.4rem;
+  }
+  .b-sns__label {
+    font-size: 1.2rem;
+    letter-spacing: 0;
+  }
 }
 
 /* ---------- Page heading / breadcrumbs ---------- */
