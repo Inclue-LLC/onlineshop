@@ -29,7 +29,8 @@
             product: product,
             index: forloop.index0,
             new_tag: section.settings.new_tag,
-            tax_label: section.settings.tax_label
+            tax_label: section.settings.tax_label,
+            show_rating: section.settings.show_rating
           -%}
         {%- endfor -%}
       {%- else -%}
@@ -53,6 +54,7 @@
     { "type": "range", "id": "limit", "label": "表示件数（すべて表示しないとき）", "min": 2, "max": 12, "step": 1, "default": 4 },
     { "type": "text", "id": "new_tag", "label": "NEW バッジを付けるタグ", "default": "NEW" },
     { "type": "text", "id": "tax_label", "label": "価格の後ろの表記", "default": "（税込）" },
+    { "type": "checkbox", "id": "show_rating", "label": "レビューの星を表示", "default": true, "info": "レビューアプリ（Judge.me など）の評価を表示します。レビューが無い商品には表示されません。" },
     { "type": "text", "id": "more_label", "label": "右上リンクの文字", "default": "すべての商品を見る" },
     { "type": "url", "id": "more_url", "label": "右上リンクのリンク先", "info": "未設定の場合はコレクションのページ" }
   ],

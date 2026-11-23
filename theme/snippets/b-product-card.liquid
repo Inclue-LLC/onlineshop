@@ -6,6 +6,7 @@
   - show_price: 価格を表示するか（初期値 true）
   - show_type: 商品タイプを表示するか（初期値 true）
   - tax_label: 価格の後ろに表示する文字（任意）
+  - show_rating: レビューの星を表示するか（レビューアプリが保存する reviews.rating を使用。レビューが無い商品は非表示）
 {%- endcomment -%}
 {%- liquid
   assign pastel = index | default: 0 | modulo: 6 | plus: 1
@@ -35,6 +36,21 @@
       <p class="b-product-card__type">{{ product.type | escape }}</p>
     {%- endif -%}
     <p class="b-product-card__title">{{ product.title | default: '[商品名]' | escape }}</p>
+    {%- if show_rating and product.metafields.reviews.rating.value != blank -%}
+      {%- liquid
+        assign rating = product.metafields.reviews.rating.value
+        assign rating_value = rating.rating | default: rating | plus: 0
+        assign rating_max = rating.scale_max | default: 5 | plus: 0
+        assign rating_pct = rating_value | times: 100 | divided_by: rating_max
+        assign rating_count = product.metafields.reviews.rating_count.value | default: product.metafields.reviews.rating_count
+        assign rating_label = rating_value | times: 10 | round | divided_by: 10.0
+      -%}
+      <p class="b-product-card__rating" aria-label="評価 {{ rating_label }} / {{ rating_max }}">
+        <span class="b-stars" style="--rating: {{ rating_pct }}%;" aria-hidden="true"></span>
+        <span class="b-product-card__rating-value">{{ rating_label }}</span>
+        {%- if rating_count != blank -%}<span class="b-product-card__rating-count">（{{ rating_count }}）</span>{%- endif -%}
+      </p>
+    {%- endif -%}
     {%- if show_price != false -%}
       <p class="b-product-card__price">
         {%- if product.price_varies -%}

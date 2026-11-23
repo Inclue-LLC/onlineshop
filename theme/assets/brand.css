@@ -1050,6 +1050,40 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
   color: var(--b-muted);
 }
 
+/* レビューの星（--rating: 0〜100%） */
+.b-product-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.4rem 0 0;
+  font-size: 1.2rem;
+  color: var(--b-muted);
+}
+
+.b-stars {
+  --star-color: #e0a63c;
+  position: relative;
+  display: inline-block;
+  font-size: 1.3rem;
+  line-height: 1;
+  letter-spacing: 0.1em;
+}
+
+.b-stars::before {
+  content: '★★★★★';
+  color: rgba(var(--color-foreground), 0.15);
+}
+
+.b-stars::after {
+  content: '★★★★★';
+  position: absolute;
+  inset: 0;
+  width: var(--rating, 0%);
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--star-color);
+}
+
 /* ---------- Split card（キャラクター） ---------- */
 .b-split {
   display: grid;
