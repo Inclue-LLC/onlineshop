@@ -98,8 +98,8 @@ npm run brand -- hanul
 
 | 画像 | 設定場所 |
 | --- | --- |
-| `hanul-icon-bear.png`（くまの顔） | テーマ設定 > ロゴ > ロゴ画像 |
-| `hanul-wordmark.png`（Studio Haneul の文字） | サイトヘッダー > ストア名のロゴ画像 |
+| `hanul-icon-bear.png`（くまの顔） | サイトヘッダー > イラストのロゴ |
+| `hanul-wordmark.png`（Studio Haneul の文字） | サイトヘッダー > テキストのロゴ |
 | `hanul-logo-square.png`（正方形） | テーマ設定 > ロゴ > ファビコン |
 
 ふにゅ・MongMong も `brands/funyu/`・`brands/mongmong/` を同じ形で作れば、同じ手順で反映できます。

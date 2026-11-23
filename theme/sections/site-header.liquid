@@ -18,24 +18,32 @@
   <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
 
+{%- liquid
+  comment
+    イラストのロゴ：ヘッダーの設定 → 未設定ならテーマ設定のロゴ
+    テキストのロゴ：ヘッダーの設定（未設定ならストア名を文字で表示）
+  endcomment
+  assign icon_logo = section.settings.icon_logo | default: settings.logo
+  assign text_logo = section.settings.name_logo
+-%}
 <header
   class="b-header{% if section.settings.sticky %} b-header--sticky{% endif %}"
   style="--logo-h: {{ section.settings.logo_height }}px; --wordmark-h: {{ section.settings.name_logo_height }}px;"
 >
   <div class="b-header__inner b-container">
     <a href="{{ routes.root_url }}" class="b-header__brand">
-      {%- if settings.logo != blank -%}
+      {%- if icon_logo != blank -%}
         {{
-          settings.logo
-          | image_url: width: 200
-          | image_tag: class: 'b-header__logo', widths: '100, 200', alt: shop.name, loading: 'eager'
+          icon_logo
+          | image_url: width: 240
+          | image_tag: class: 'b-header__logo', widths: '120, 240', alt: shop.name, loading: 'eager'
         }}
-      {%- elsif section.settings.name_logo == blank -%}
+      {%- elsif text_logo == blank -%}
         <span class="b-header__logo b-header__logo--placeholder" aria-hidden="true">ロゴ</span>
       {%- endif -%}
-      {%- if section.settings.name_logo != blank -%}
+      {%- if text_logo != blank -%}
         {{
-          section.settings.name_logo
+          text_logo
           | image_url: width: 600
           | image_tag: class: 'b-header__wordmark', widths: '200, 400, 600', alt: shop.name, loading: 'eager'
         }}
@@ -128,20 +136,26 @@
 {
   "name": "サイトヘッダー",
   "class": "b-header-section",
-  "enabled_on": { "groups": ["header"] },
+  "enabled_on": {
+    "groups": [
+      "header"
+    ]
+  },
   "settings": [
     {
       "type": "header",
       "content": "ロゴ"
     },
     {
-      "type": "paragraph",
-      "content": "左側のロゴ（マーク）は「テーマ設定 > ロゴ」で設定します。"
+      "type": "image_picker",
+      "id": "icon_logo",
+      "label": "イラストのロゴ",
+      "info": "左側に表示するイラスト（マーク）の画像。未設定の場合は「テーマ設定 > ロゴ」の画像を使います。正方形に近い透過PNG推奨。"
     },
     {
       "type": "range",
       "id": "logo_height",
-      "label": "ロゴ（マーク）の高さ（PC）",
+      "label": "イラストのロゴの高さ（PC）",
       "min": 30,
       "max": 80,
       "step": 2,
@@ -151,13 +165,13 @@
     {
       "type": "image_picker",
       "id": "name_logo",
-      "label": "ストア名のロゴ画像（ロゴタイプ）",
-      "info": "設定するとストア名の文字の代わりに表示されます。横長の透過PNG／SVG推奨。"
+      "label": "テキストのロゴ",
+      "info": "イラストの右に表示する文字ロゴの画像。横長の透過PNG推奨。"
     },
     {
       "type": "range",
       "id": "name_logo_height",
-      "label": "ストア名のロゴ画像の高さ（PC）",
+      "label": "テキストのロゴの高さ（PC）",
       "min": 16,
       "max": 60,
       "step": 2,
@@ -167,7 +181,7 @@
     {
       "type": "checkbox",
       "id": "show_shop_name",
-      "label": "ロゴ画像が無いとき、ストア名を文字で表示",
+      "label": "テキストのロゴが無いとき、ストア名を文字で表示",
       "default": true
     },
     {
