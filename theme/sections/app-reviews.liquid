@@ -1,0 +1,39 @@
+{%- comment -%}
+  お客様の声（レビューアプリ用）。見出しはサイトの他のセクションと同じ形で表示し、
+  中身にはレビューアプリ（Ali Reviews など）のブロックを追加する。
+{%- endcomment -%}
+<section class="b-section b-app-reviews">
+  <div class="b-container">
+    {%- render 'b-section-head',
+      heading: section.settings.heading,
+      subheading: section.settings.subheading,
+      link_label: section.settings.more_label,
+      link_url: section.settings.more_url
+    -%}
+    <div class="b-app-reviews__body">
+      {%- for block in section.blocks -%}
+        {% render block %}
+      {%- else -%}
+        {%- if request.design_mode -%}
+          <p class="b-empty">「ブロックを追加」からレビューアプリ（Ali Reviews など）のブロックを追加してください。</p>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "お客様の声（レビュー）",
+  "tag": "div",
+  "settings": [
+    { "type": "paragraph", "content": "レビューアプリのブロック（カルーセルなど）を追加して使います。表示内容・デザインはアプリ側で設定します。" },
+    { "type": "text", "id": "heading", "label": "見出し", "default": "お客様の声" },
+    { "type": "text", "id": "subheading", "label": "小見出し", "default": "REVIEWS" },
+    { "type": "text", "id": "more_label", "label": "右上リンクの文字" },
+    { "type": "url", "id": "more_url", "label": "右上リンクのリンク先" }
+  ],
+  "blocks": [{ "type": "@app" }],
+  "presets": [{ "name": "お客様の声（レビュー）" }]
+}
+{% endschema %}

@@ -1794,3 +1794,8 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
 .shopify-section:has(> .b-page-heading) + .shopify-section > .b-section:not(.b-about) {
   padding-top: 0;
 }
+
+/* お客様の声（レビューアプリ） */
+.b-app-reviews__body {
+  min-height: 1px;
+}
