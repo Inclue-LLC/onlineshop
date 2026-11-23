@@ -1,17 +1,24 @@
 {%- liquid
+  comment
+    「スライドにする」がオフのときは、1枚目だけを固定で表示する
+  endcomment
   assign slide_count = section.blocks.size
+  assign is_slideshow = section.settings.slideshow
+  if is_slideshow == false and slide_count > 1
+    assign slide_count = 1
+  endif
 -%}
 <section class="b-hero b-section b-section--tight" style="--hero-ratio: {{ section.settings.ratio_desktop }}; --hero-ratio-mobile: {{ section.settings.ratio_mobile }};">
   <div class="b-container">
     <b-slider
       class="b-slider"
-      data-autoplay="{{ section.settings.autoplay }}"
+      data-autoplay="{% if is_slideshow %}{{ section.settings.autoplay }}{% else %}false{% endif %}"
       data-interval="{{ section.settings.interval | times: 1000 }}"
       aria-roledescription="carousel"
       aria-label="{{ section.settings.label | escape }}"
     >
       <ul class="b-slider__track" data-slider-track>
-        {%- for block in section.blocks -%}
+        {%- for block in section.blocks limit: slide_count -%}
           <li
             class="b-slider__slide"
             id="Slide-{{ section.id }}-{{ forloop.index }}"
@@ -54,7 +61,7 @@
             {%- else -%}
               {%- render 'b-placeholder',
                 label: 'ヘッダー画像',
-                note: '推奨 2400×1000px ／ 新商品・POP UPのバナーに差し替え可（スライド）',
+                note: '推奨 2400×1000px',
                 color: 1,
                 dashed: true
               -%}
@@ -65,7 +72,7 @@
       </ul>
       {%- if slide_count > 1 -%}
         <div class="b-slider__dots" role="group" aria-label="スライドの切り替え">
-          {%- for block in section.blocks -%}
+          {%- for block in section.blocks limit: slide_count -%}
             <button
               type="button"
               class="b-slider__dot{% if forloop.first %} is-active{% endif %}"
@@ -82,11 +89,12 @@
 
 {% schema %}
 {
-  "name": "ヘッダー画像（スライド）",
+  "name": "ヘッダー画像",
   "tag": "div",
   "settings": [
     { "type": "text", "id": "label", "label": "スライドの名前（読み上げ用）", "default": "メインビジュアル" },
-    { "type": "checkbox", "id": "autoplay", "label": "自動で切り替える", "default": true },
+    { "type": "checkbox", "id": "slideshow", "label": "スライドにする（複数枚を切り替える）", "default": true, "info": "オフにすると1枚目の画像だけを固定で表示します。" },
+    { "type": "checkbox", "id": "autoplay", "label": "自動で切り替える（スライドのとき）", "default": true },
     { "type": "range", "id": "interval", "label": "切り替え間隔", "min": 3, "max": 10, "step": 1, "unit": "秒", "default": 5 },
     {
       "type": "select",
@@ -128,7 +136,7 @@
   "max_blocks": 8,
   "presets": [
     {
-      "name": "ヘッダー画像（スライド）",
+      "name": "ヘッダー画像",
       "blocks": [{ "type": "slide" }, { "type": "slide" }, { "type": "slide" }]
     }
   ]
