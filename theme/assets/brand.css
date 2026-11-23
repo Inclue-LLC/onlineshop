@@ -1477,10 +1477,6 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
   color: #ffffff;
 }
 
-.b-sns__btn--tiktok .b-sns__label {
-  text-shadow: -1.5px -1px 0 #25f4ee, 1.5px 1px 0 #fe2c55;
-}
-
 .b-sns__btn--youtube {
   background: #ff0000;
   color: #ffffff;
