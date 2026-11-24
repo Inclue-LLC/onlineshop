@@ -4,7 +4,30 @@
 {%- endcomment -%}
 <section class="b-section b-newsletter" id="newsletter-{{ section.id }}">
   <div class="b-container">
-    <div class="b-card b-newsletter__box">
+    {%- liquid
+      assign has_visual = false
+      if section.settings.image != blank or request.design_mode
+        assign has_visual = true
+      endif
+    -%}
+    <div class="b-card b-newsletter__box{% if has_visual %} b-newsletter__box--visual{% endif %}">
+      {%- if has_visual -%}
+        <div class="b-newsletter__visual">
+          {%- if section.settings.image != blank -%}
+            {{
+              section.settings.image
+              | image_url: width: 900
+              | image_tag: loading: 'lazy', widths: '300, 450, 600, 900', sizes: '(min-width: 750px) 320px, 70vw', class: 'b-newsletter__image'
+            }}
+          {%- else -%}
+            {%- render 'b-placeholder', label: '壁紙の見本画像', note: '縦長（例 1080×1920px）がおすすめ', color: 1 -%}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+      <div class="b-newsletter__content">
+      {%- if section.settings.badge != blank -%}
+        <p class="b-newsletter__badge-wrap"><span class="b-badge b-badge--accent b-newsletter__badge">{{ section.settings.badge | escape }}</span></p>
+      {%- endif -%}
       {%- if section.settings.subheading != blank -%}
         <p class="b-subtitle b-center b-newsletter__sub">{{ section.settings.subheading | escape }}</p>
       {%- endif -%}
@@ -59,28 +82,113 @@
         {%- endif -%}
       {%- endform -%}
 
+      {%- if section.settings.line_url != blank -%}
+        <p class="b-newsletter__or"><span>または</span></p>
+        <a href="{{ section.settings.line_url }}" class="b-newsletter__line" target="_blank" rel="noopener">
+          {{- section.settings.line_label | escape -}}
+        </a>
+      {%- endif -%}
+
       {%- if section.settings.note != blank -%}
         <div class="b-newsletter__note rte">{{ section.settings.note }}</div>
       {%- endif -%}
+      </div>
     </div>
   </div>
 </section>
 
 {% schema %}
 {
-  "name": "メルマガ登録",
+  "name": "メルマガ・LINE登録",
   "tag": "div",
   "settings": [
-    { "type": "paragraph", "content": "登録されたメールアドレスは「顧客」にメール配信を承諾済みとして保存されます。Shopify Email などで配信できます。" },
-    { "type": "text", "id": "subheading", "label": "小見出し", "default": "NEWSLETTER" },
-    { "type": "text", "id": "heading", "label": "見出し", "default": "メールマガジン" },
-    { "type": "richtext", "id": "text", "label": "説明文", "default": "<p>新商品やPOP UPの情報を、いち早くお届けします。</p>" },
-    { "type": "text", "id": "placeholder", "label": "入力欄の表示", "default": "メールアドレス" },
-    { "type": "text", "id": "button_label", "label": "ボタンの文字", "default": "登録する" },
-    { "type": "text", "id": "success_message", "label": "登録完了のメッセージ", "default": "ご登録ありがとうございます。" },
-    { "type": "richtext", "id": "note", "label": "注記", "default": "<p>ご登録いただいたメールアドレスは、<a href=\"/policies/privacy-policy\" title=\"プライバシーポリシー\">プライバシーポリシー</a>に基づいて管理します。配信はいつでも停止できます。</p>" },
-    { "type": "text", "id": "tag", "label": "顧客に付けるタグ", "default": "newsletter", "info": "顧客一覧でメルマガ登録者を絞り込むときに使えます。" }
+    {
+      "type": "paragraph",
+      "content": "登録されたメールアドレスは「顧客」にメール配信を承諾済みとして保存されます。Shopify Email などで配信できます。"
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "特典のバッジ",
+      "default": "毎月限定壁紙プレゼント",
+      "info": "空欄にするとバッジを表示しません。"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "特典の見本画像（壁紙など）",
+      "info": "未設定の場合は画像なしで中央に表示します。"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "小見出し",
+      "default": "NEWSLETTER"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "見出し",
+      "default": "限定壁紙を毎月お届け"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "説明文",
+      "default": "<p>メールマガジン・LINE公式アカウントに登録すると、<strong>毎月限定の壁紙</strong>をお届けします。新商品やPOP UPの情報もいち早くお知らせします。</p>"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "入力欄の表示",
+      "default": "メールアドレス"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "ボタンの文字",
+      "default": "メールで受け取る"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "登録完了のメッセージ",
+      "default": "ご登録ありがとうございます。次回の配信で限定壁紙をお届けします。"
+    },
+    {
+      "type": "header",
+      "content": "LINE公式アカウント"
+    },
+    {
+      "type": "url",
+      "id": "line_url",
+      "label": "LINE 友だち追加のリンク",
+      "info": "例：https://lin.ee/xxxx 。空欄の場合は LINE ボタンを表示しません。"
+    },
+    {
+      "type": "text",
+      "id": "line_label",
+      "label": "LINE ボタンの文字",
+      "default": "LINEで友だち追加して受け取る"
+    },
+    {
+      "type": "richtext",
+      "id": "note",
+      "label": "注記",
+      "default": "<p>ご登録いただいたメールアドレスは、<a href=\"/policies/privacy-policy\" title=\"プライバシーポリシー\">プライバシーポリシー</a>に基づいて管理します。配信はいつでも停止できます。</p>"
+    },
+    {
+      "type": "text",
+      "id": "tag",
+      "label": "顧客に付けるタグ",
+      "default": "newsletter",
+      "info": "顧客一覧でメルマガ登録者を絞り込むときに使えます。"
+    }
   ],
-  "presets": [{ "name": "メルマガ登録" }]
+  "presets": [
+    {
+      "name": "メルマガ・LINE登録"
+    }
+  ]
 }
 {% endschema %}

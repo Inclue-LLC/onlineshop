@@ -1802,6 +1802,9 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
 
 /* ---------- メルマガ登録 ---------- */
 .b-newsletter__box {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.8rem;
   max-width: 76rem;
   margin: 0 auto;
   padding: 3.2rem 2rem;
@@ -1903,4 +1906,103 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
 
 .b-newsletter__note a {
   color: var(--b-accent);
+}
+
+/* 特典画像つき（2カラム） */
+.b-newsletter__box--visual {
+  max-width: 100rem;
+}
+
+@media screen and (min-width: 750px) {
+  .b-newsletter__box--visual {
+    grid-template-columns: minmax(0, 32rem) minmax(0, 1fr);
+    gap: 5.6rem;
+    align-items: center;
+    text-align: left;
+  }
+  .b-newsletter__box--visual .b-center {
+    text-align: left;
+  }
+  .b-newsletter__box--visual .b-newsletter__field,
+  .b-newsletter__box--visual .b-newsletter__message--success,
+  .b-newsletter__box--visual .b-newsletter__line {
+    margin-left: 0;
+  }
+}
+
+.b-newsletter__visual {
+  width: 70%;
+  max-width: 32rem;
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 750px) {
+  .b-newsletter__visual {
+    width: 100%;
+  }
+}
+
+.b-newsletter__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--brand-radius);
+  box-shadow: 0 1.2rem 3.2rem rgba(var(--color-foreground), 0.12);
+}
+
+.b-newsletter__visual .b-ph {
+  aspect-ratio: 9 / 16;
+  border-radius: var(--brand-radius);
+}
+
+.b-newsletter__badge-wrap {
+  margin: 0 0 1.2rem;
+}
+
+.b-newsletter__badge {
+  padding: 0.6rem 1.6rem;
+  font-size: 1.3rem;
+}
+
+.b-newsletter__or {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  max-width: 52rem;
+  margin: 2rem auto 1.2rem;
+  font-size: 1.2rem;
+  color: var(--b-muted);
+}
+
+.b-newsletter__or::before,
+.b-newsletter__or::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--brand-line);
+}
+
+.b-newsletter__box--visual .b-newsletter__or {
+  margin-left: 0;
+}
+
+.b-newsletter__line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 52rem;
+  min-height: 4.8rem;
+  margin: 0 auto;
+  padding: 0 2.4rem;
+  border-radius: 99px;
+  background: #06c755;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.b-newsletter__line:hover {
+  opacity: 0.85;
 }

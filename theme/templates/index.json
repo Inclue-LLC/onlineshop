@@ -184,9 +184,11 @@
     "newsletter": {
       "type": "newsletter-signup",
       "settings": {
+        "badge": "毎月限定壁紙プレゼント",
         "subheading": "NEWSLETTER",
-        "heading": "メールマガジン",
-        "button_label": "登録する",
+        "heading": "限定壁紙を毎月お届け",
+        "button_label": "メールで受け取る",
+        "line_label": "LINEで友だち追加して受け取る",
         "tag": "newsletter"
       }
     }
