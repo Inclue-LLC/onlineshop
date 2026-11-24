@@ -2186,3 +2186,25 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
     display: none;
   }
 }
+
+/* 見出しが空欄のとき、バッジをタイトルとして大きく表示 */
+.b-newsletter__badge--title {
+  padding: 1rem 2.4rem;
+  font-size: 1.7rem;
+  letter-spacing: 0.06em;
+}
+
+@media screen and (min-width: 750px) {
+  .b-newsletter__badge--title {
+    padding: 1.1rem 2.8rem;
+    font-size: 1.8rem;
+  }
+  .b-newsletter__badge-wrap--pc:has(.b-newsletter__badge--title) {
+    margin-bottom: 1.6rem;
+  }
+}
+
+.b-newsletter__badge-wrap--sp .b-newsletter__badge--title {
+  padding: 1rem 2.4rem;
+  font-size: 1.7rem;
+}
