@@ -10,7 +10,7 @@
       link_label: section.settings.more_label,
       link_url: section.settings.more_url
     -%}
-    <div class="b-app-reviews__body">
+    <div class="b-app-reviews__body" style="--app-pull: {{ section.settings.pull_up | default: 0 }}px;">
       {%- for block in section.blocks -%}
         {% render block %}
       {%- else -%}
@@ -27,13 +27,53 @@
   "name": "お客様の声（レビュー）",
   "tag": "div",
   "settings": [
-    { "type": "paragraph", "content": "レビューアプリのブロック（カルーセルなど）を追加して使います。表示内容・デザインはアプリ側で設定します。" },
-    { "type": "text", "id": "heading", "label": "見出し", "default": "お客様の声" },
-    { "type": "text", "id": "subheading", "label": "小見出し", "default": "REVIEWS" },
-    { "type": "text", "id": "more_label", "label": "右上リンクの文字" },
-    { "type": "url", "id": "more_url", "label": "右上リンクのリンク先" }
+    {
+      "type": "paragraph",
+      "content": "レビューアプリのブロック（カルーセルなど）を追加して使います。表示内容・デザインはアプリ側で設定します。"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "見出し",
+      "default": "お客様の声"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "小見出し",
+      "default": "REVIEWS"
+    },
+    {
+      "type": "text",
+      "id": "more_label",
+      "label": "右上リンクの文字"
+    },
+    {
+      "type": "url",
+      "id": "more_url",
+      "label": "右上リンクのリンク先"
+    },
+    {
+      "type": "range",
+      "id": "pull_up",
+      "label": "アプリの上の空白を詰める量",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 40,
+      "info": "レビューアプリの中に元からある上の空白を詰めます。見出しと重なる場合は小さくしてください。"
+    }
   ],
-  "blocks": [{ "type": "@app" }],
-  "presets": [{ "name": "お客様の声（レビュー）" }]
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "お客様の声（レビュー）"
+    }
+  ]
 }
 {% endschema %}

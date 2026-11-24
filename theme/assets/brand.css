@@ -2157,3 +2157,32 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
   text-shadow: 0 0 1.2rem rgba(0, 0, 0, 0.08);
   pointer-events: none;
 }
+
+/* お客様の声：アプリの中の上の空白を詰める（--app-pull はセクション設定） */
+.b-app-reviews__body > .shopify-app-block:first-child,
+.b-app-reviews__body > div:first-child {
+  margin-top: calc(var(--app-pull, 0px) * -1) !important;
+}
+
+/* メルマガ：特典バッジ（スマホは画像の上・大きめ、PCは文章の上） */
+.b-newsletter__badge-wrap--sp {
+  margin: 0 0 -1.2rem;
+  text-align: center;
+}
+
+.b-newsletter__badge-wrap--sp .b-newsletter__badge {
+  padding: 0.8rem 2rem;
+  font-size: 1.5rem;
+}
+
+@media screen and (max-width: 749px) {
+  .b-newsletter__badge-wrap--pc {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .b-newsletter__badge-wrap--sp {
+    display: none;
+  }
+}

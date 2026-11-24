@@ -185,7 +185,7 @@
       "type": "newsletter-signup",
       "settings": {
         "badge": "毎月1日 限定壁紙プレゼント",
-        "subheading": "LINE / NEWSLETTER",
+        "subheading": "",
         "heading": "限定壁紙を毎月1日にお届け",
         "button_label": "メールで受け取る",
         "line_label": "LINEで友だち追加して受け取る",

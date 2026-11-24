@@ -11,6 +11,9 @@
       endif
     -%}
     <div class="b-card b-newsletter__box{% if has_visual %} b-newsletter__box--visual{% endif %}">
+      {%- if section.settings.badge != blank -%}
+        <p class="b-newsletter__badge-wrap b-newsletter__badge-wrap--sp"><span class="b-badge b-badge--accent b-newsletter__badge">{{ section.settings.badge | escape }}</span></p>
+      {%- endif -%}
       {%- if has_visual -%}
         {%- liquid
           assign visual_style = section.settings.image_style | default: 'phone'
@@ -40,7 +43,7 @@
       {%- endif -%}
       <div class="b-newsletter__content">
       {%- if section.settings.badge != blank -%}
-        <p class="b-newsletter__badge-wrap"><span class="b-badge b-badge--accent b-newsletter__badge">{{ section.settings.badge | escape }}</span></p>
+        <p class="b-newsletter__badge-wrap b-newsletter__badge-wrap--pc"><span class="b-badge b-badge--accent b-newsletter__badge">{{ section.settings.badge | escape }}</span></p>
       {%- endif -%}
       {%- if section.settings.subheading != blank -%}
         <p class="b-subtitle b-center b-newsletter__sub">{{ section.settings.subheading | escape }}</p>
@@ -235,7 +238,8 @@
       "type": "text",
       "id": "subheading",
       "label": "小見出し",
-      "default": "LINE / NEWSLETTER"
+      "default": "",
+      "info": "空欄にすると表示しません。"
     },
     {
       "type": "text",
