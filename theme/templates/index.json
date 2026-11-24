@@ -180,6 +180,15 @@
         "more_label": "",
         "more_url": ""
       }
+    },
+    "newsletter": {
+      "type": "newsletter-signup",
+      "settings": {
+        "subheading": "NEWSLETTER",
+        "heading": "メールマガジン",
+        "button_label": "登録する",
+        "tag": "newsletter"
+      }
     }
   },
   "order": [
@@ -191,6 +200,7 @@
     "characters",
     "about",
     "stores",
-    "sns"
+    "sns",
+    "newsletter"
   ]
 }

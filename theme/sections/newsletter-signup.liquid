@@ -1,0 +1,86 @@
+{%- comment -%}
+  メルマガ登録フォーム。Shopify 標準の顧客登録（form 'customer'）を使い、
+  登録されたメールアドレスは管理画面「顧客」に「メール配信を承諾済み」として保存される（タグ: newsletter）。
+{%- endcomment -%}
+<section class="b-section b-newsletter" id="newsletter-{{ section.id }}">
+  <div class="b-container">
+    <div class="b-card b-newsletter__box">
+      {%- if section.settings.subheading != blank -%}
+        <p class="b-subtitle b-center b-newsletter__sub">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="b-title b-title--small b-center b-newsletter__title">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <div class="b-newsletter__text rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+
+      {%- liquid
+        assign form_id = 'NewsletterForm-' | append: section.id
+        assign return_to = request.path | append: '#newsletter-' | append: section.id
+      -%}
+      {%- form 'customer', id: form_id, class: 'b-newsletter__form', return_to: return_to -%}
+        <input type="hidden" name="contact[tags]" value="{{ section.settings.tag | default: 'newsletter' | escape }}">
+        {%- if form.posted_successfully? -%}
+          <p class="b-newsletter__message b-newsletter__message--success" role="status">
+            {{ section.settings.success_message | escape }}
+          </p>
+        {%- else -%}
+          <div class="b-newsletter__field">
+            <label class="visually-hidden" for="NewsletterEmail-{{ section.id }}">メールアドレス</label>
+            <input
+              id="NewsletterEmail-{{ section.id }}"
+              class="b-newsletter__input"
+              type="email"
+              name="contact[email]"
+              value="{{ form.email }}"
+              placeholder="{{ section.settings.placeholder | escape }}"
+              autocomplete="email"
+              autocorrect="off"
+              autocapitalize="off"
+              required
+              {% if form.errors %}
+                aria-invalid="true" aria-describedby="NewsletterError-{{ section.id }}"
+              {% endif %}
+            >
+            <button type="submit" class="b-btn b-newsletter__button" name="commit">
+              {{- section.settings.button_label | escape -}}
+            </button>
+          </div>
+          {%- if form.errors -%}
+            <p class="b-newsletter__message b-newsletter__message--error" id="NewsletterError-{{ section.id }}" role="alert">
+              {%- if form.errors.messages.email contains 'taken' or form.errors.messages.email contains '使用' -%}
+                このメールアドレスはすでに登録されています。
+              {%- else -%}
+                メールアドレスを正しく入力してください。
+              {%- endif -%}
+            </p>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endform -%}
+
+      {%- if section.settings.note != blank -%}
+        <div class="b-newsletter__note rte">{{ section.settings.note }}</div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "メルマガ登録",
+  "tag": "div",
+  "settings": [
+    { "type": "paragraph", "content": "登録されたメールアドレスは「顧客」にメール配信を承諾済みとして保存されます。Shopify Email などで配信できます。" },
+    { "type": "text", "id": "subheading", "label": "小見出し", "default": "NEWSLETTER" },
+    { "type": "text", "id": "heading", "label": "見出し", "default": "メールマガジン" },
+    { "type": "richtext", "id": "text", "label": "説明文", "default": "<p>新商品やPOP UPの情報を、いち早くお届けします。</p>" },
+    { "type": "text", "id": "placeholder", "label": "入力欄の表示", "default": "メールアドレス" },
+    { "type": "text", "id": "button_label", "label": "ボタンの文字", "default": "登録する" },
+    { "type": "text", "id": "success_message", "label": "登録完了のメッセージ", "default": "ご登録ありがとうございます。" },
+    { "type": "richtext", "id": "note", "label": "注記", "default": "<p>ご登録いただいたメールアドレスは、<a href=\"/policies/privacy-policy\" title=\"プライバシーポリシー\">プライバシーポリシー</a>に基づいて管理します。配信はいつでも停止できます。</p>" },
+    { "type": "text", "id": "tag", "label": "顧客に付けるタグ", "default": "newsletter", "info": "顧客一覧でメルマガ登録者を絞り込むときに使えます。" }
+  ],
+  "presets": [{ "name": "メルマガ登録" }]
+}
+{% endschema %}
