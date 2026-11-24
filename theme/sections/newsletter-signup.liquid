@@ -12,16 +12,30 @@
     -%}
     <div class="b-card b-newsletter__box{% if has_visual %} b-newsletter__box--visual{% endif %}">
       {%- if has_visual -%}
-        <div class="b-newsletter__visual">
-          {%- if section.settings.image != blank -%}
-            {{
-              section.settings.image
-              | image_url: width: 900
-              | image_tag: loading: 'lazy', widths: '300, 450, 600, 900', sizes: '(min-width: 750px) 320px, 70vw', class: 'b-newsletter__image'
-            }}
-          {%- else -%}
-            {%- render 'b-placeholder', label: '壁紙の見本画像', note: '縦長（例 1080×1920px）がおすすめ', color: 1 -%}
-          {%- endif -%}
+        {%- liquid
+          assign visual_style = section.settings.image_style | default: 'phone'
+        -%}
+        <div class="b-newsletter__visual b-newsletter__visual--{{ visual_style }}">
+          <div class="b-newsletter__frame">
+            <div class="b-newsletter__screen">
+              {%- if section.settings.image != blank -%}
+                {%- comment -%} 見本なので、表示に必要な大きさ（最大幅600px）で読み込む {%- endcomment -%}
+                {{
+                  section.settings.image
+                  | image_url: width: 600
+                  | image_tag: loading: 'lazy', widths: '300, 450, 600', sizes: '(min-width: 750px) 300px, 60vw', class: 'b-newsletter__image', alt: section.settings.sample_label
+                }}
+              {%- else -%}
+                {%- render 'b-placeholder', label: '壁紙の見本画像', note: '縦長（例 1080×1920px）がおすすめ', color: 1 -%}
+              {%- endif -%}
+              {%- if section.settings.watermark -%}
+                <span class="b-newsletter__watermark" aria-hidden="true">SAMPLE</span>
+              {%- endif -%}
+              {%- if section.settings.sample_label != blank -%}
+                <span class="b-newsletter__sample-label">{{ section.settings.sample_label | escape }}</span>
+              {%- endif -%}
+            </div>
+          </div>
         </div>
       {%- endif -%}
       <div class="b-newsletter__content">
@@ -185,8 +199,37 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "特典の見本画像（壁紙など）",
-      "info": "未設定の場合は画像なしで中央に表示します。"
+      "label": "見本画像（過去に配信した壁紙など）",
+      "info": "縦長（9:16）の画像がおすすめ。表示用に小さめの画質で読み込みます。"
+    },
+    {
+      "type": "select",
+      "id": "image_style",
+      "label": "見本画像の見せ方",
+      "default": "phone",
+      "options": [
+        {
+          "value": "phone",
+          "label": "スマホの画面風（枠付き）"
+        },
+        {
+          "value": "plain",
+          "label": "角丸の画像のみ"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "sample_label",
+      "label": "画像の上のラベル",
+      "default": "過去の配信より",
+      "info": "空欄にすると表示しません。"
+    },
+    {
+      "type": "checkbox",
+      "id": "watermark",
+      "label": "「SAMPLE」の透かしを入れる",
+      "default": false
     },
     {
       "type": "text",

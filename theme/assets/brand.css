@@ -1945,14 +1945,15 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
 .b-newsletter__image {
   display: block;
   width: 100%;
-  height: auto;
-  border-radius: var(--brand-radius);
-  box-shadow: 0 1.2rem 3.2rem rgba(var(--color-foreground), 0.12);
+  height: 100%;
+  object-fit: cover;
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 .b-newsletter__visual .b-ph {
-  aspect-ratio: 9 / 16;
-  border-radius: var(--brand-radius);
+  height: 100%;
+  border-radius: 0;
 }
 
 .b-newsletter__badge-wrap {
@@ -2048,4 +2049,74 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
 
 .b-newsletter__caption--lead {
   margin: 0 0 1rem;
+}
+
+/* 見本画像：スマホの画面風 */
+.b-newsletter__frame {
+  position: relative;
+  border-radius: var(--brand-radius);
+  box-shadow: 0 1.2rem 3.2rem rgba(var(--color-foreground), 0.14);
+}
+
+.b-newsletter__screen {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  border-radius: inherit;
+  background: var(--brand-pastel-1);
+}
+
+.b-newsletter__visual--phone .b-newsletter__frame {
+  padding: 1rem;
+  border-radius: 4rem;
+  background: #4e4238;
+  transform: rotate(-3deg);
+}
+
+.b-newsletter__visual--phone .b-newsletter__screen {
+  border-radius: 3rem;
+}
+
+/* ノッチ */
+.b-newsletter__visual--phone .b-newsletter__frame::before {
+  content: '';
+  position: absolute;
+  top: 1.8rem;
+  left: 50%;
+  z-index: 2;
+  width: 28%;
+  height: 1.8rem;
+  border-radius: 99px;
+  background: #4e4238;
+  transform: translateX(-50%);
+}
+
+.b-newsletter__sample-label {
+  position: absolute;
+  left: 50%;
+  bottom: 1.6rem;
+  z-index: 2;
+  padding: 0.5rem 1.4rem;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--b-text);
+  font-size: 1.2rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.b-newsletter__watermark {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 4.4rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  transform: rotate(-30deg);
+  text-shadow: 0 0 1.2rem rgba(0, 0, 0, 0.08);
+  pointer-events: none;
 }
