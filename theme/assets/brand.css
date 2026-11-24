@@ -2006,3 +2006,14 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
 .b-newsletter__line:hover {
   opacity: 0.85;
 }
+
+.b-newsletter__next {
+  margin: -1.2rem 0 2.4rem;
+  font-size: 1.4rem;
+  color: var(--b-text);
+}
+
+.b-newsletter__next strong {
+  margin: 0 0.2rem;
+  color: var(--b-accent);
+}

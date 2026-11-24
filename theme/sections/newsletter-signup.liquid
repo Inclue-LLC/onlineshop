@@ -38,6 +38,33 @@
         <div class="b-newsletter__text rte">{{ section.settings.text }}</div>
       {%- endif -%}
 
+      {%- if section.settings.show_next_date -%}
+        {%- liquid
+          comment
+            次回の配信日：今日が配信日より前なら今月、配信日以降なら翌月
+          endcomment
+          assign d_day = section.settings.delivery_day | default: 1
+          assign today_day = 'now' | date: '%d' | plus: 0
+          assign n_month = 'now' | date: '%m' | plus: 0
+          assign n_year = 'now' | date: '%Y' | plus: 0
+          if today_day >= d_day
+            assign n_month = n_month | plus: 1
+            if n_month > 12
+              assign n_month = 1
+              assign n_year = n_year | plus: 1
+            endif
+          endif
+          assign n_mm = n_month | prepend: '0' | slice: -2, 2
+          assign n_dd = d_day | prepend: '0' | slice: -2, 2
+          assign next_str = n_year | append: '-' | append: n_mm | append: '-' | append: n_dd
+          assign weekdays = '日,月,火,水,木,金,土' | split: ','
+          assign w_index = next_str | date: '%w' | plus: 0
+        -%}
+        <p class="b-newsletter__next">
+          次回の配信は<strong>{{ n_month }}月{{ d_day }}日（{{ weekdays[w_index] }}）</strong>です
+        </p>
+      {%- endif -%}
+
       {%- liquid
         assign form_id = 'NewsletterForm-' | append: section.id
         assign return_to = request.path | append: '#newsletter-' | append: section.id
@@ -110,7 +137,7 @@
       "type": "text",
       "id": "badge",
       "label": "特典のバッジ",
-      "default": "毎月限定壁紙プレゼント",
+      "default": "毎月1日 限定壁紙プレゼント",
       "info": "空欄にするとバッジを表示しません。"
     },
     {
@@ -129,13 +156,29 @@
       "type": "text",
       "id": "heading",
       "label": "見出し",
-      "default": "限定壁紙を毎月お届け"
+      "default": "限定壁紙を毎月1日にお届け"
     },
     {
       "type": "richtext",
       "id": "text",
       "label": "説明文",
-      "default": "<p>メールマガジン・LINE公式アカウントに登録すると、<strong>毎月限定の壁紙</strong>をお届けします。新商品やPOP UPの情報もいち早くお知らせします。</p>"
+      "default": "<p>メールマガジン・LINE公式アカウントに登録すると、<strong>毎月1日に限定の壁紙</strong>をお届けします。新商品やPOP UPの情報もいち早くお知らせします。</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_next_date",
+      "label": "次回の配信日を表示する",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "delivery_day",
+      "label": "毎月の配信日",
+      "min": 1,
+      "max": 28,
+      "step": 1,
+      "unit": "日",
+      "default": 1
     },
     {
       "type": "text",
@@ -153,7 +196,7 @@
       "type": "text",
       "id": "success_message",
       "label": "登録完了のメッセージ",
-      "default": "ご登録ありがとうございます。次回の配信で限定壁紙をお届けします。"
+      "default": "ご登録ありがとうございます。次回の配信（毎月1日）で限定壁紙をお届けします。"
     },
     {
       "type": "header",
