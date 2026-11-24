@@ -2070,7 +2070,6 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
   padding: 1rem;
   border-radius: 4rem;
   background: #4e4238;
-  transform: rotate(-3deg);
 }
 
 .b-newsletter__visual--phone .b-newsletter__screen {
