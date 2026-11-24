@@ -117,7 +117,7 @@
           "type": "link",
           "settings": {
             "label": "LINE公式アカウント",
-            "sublabel": "最新情報を配信",
+            "sublabel": "限定壁紙を配信中",
             "url": "",
             "style": "line"
           }
@@ -202,7 +202,7 @@
     "characters",
     "about",
     "stores",
-    "sns",
-    "newsletter"
+    "newsletter",
+    "sns"
   ]
 }
