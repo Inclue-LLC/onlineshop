@@ -8,7 +8,8 @@
       heading: section.settings.heading,
       subheading: section.settings.subheading,
       link_label: section.settings.more_label,
-      link_url: more_url
+      link_url: more_url,
+      link_mobile_bottom: true
     -%}
     <div class="b-card b-news-rows{% if section.settings.show_image %} b-news-rows--image{% endif %}">
       {%- for article in news_blog.articles limit: section.settings.limit -%}
@@ -19,6 +20,11 @@
         </p>
       {%- endfor -%}
     </div>
+    {%- if section.settings.more_label != blank and more_url != blank -%}
+      <div class="b-more-bottom">
+        <a href="{{ more_url }}" class="b-btn b-btn--outline">{{ section.settings.more_label | escape }} →</a>
+      </div>
+    {%- endif -%}
   </div>
 </section>
 

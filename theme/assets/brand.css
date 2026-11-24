@@ -62,11 +62,11 @@ h3,
 }
 
 .b-section {
-  padding: 5.6rem 0;
+  padding: 3.6rem 0;
 }
 
 .b-section--tight {
-  padding: 2.4rem 0;
+  padding: 1.6rem 0;
 }
 
 .b-section--top-none {
@@ -168,7 +168,35 @@ h3,
   align-items: flex-end;
   justify-content: space-between;
   gap: 1.6rem;
-  margin-bottom: 2.8rem;
+  margin-bottom: 2rem;
+}
+
+@media screen and (min-width: 750px) {
+  .b-section-head {
+    margin-bottom: 2.8rem;
+  }
+}
+
+/* 「一覧へ」リンク：スマホでは見出しの右ではなく、内容の下にボタンで表示する */
+@media screen and (max-width: 749px) {
+  .b-more--pc {
+    display: none;
+  }
+}
+
+.b-more-bottom {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.b-more-bottom .b-btn {
+  min-width: 22rem;
+}
+
+@media screen and (min-width: 750px) {
+  .b-more-bottom {
+    display: none;
+  }
 }
 
 .b-section-head--center {
@@ -1795,9 +1823,19 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
   padding-top: 0;
 }
 
-/* お客様の声（レビューアプリ） */
+/* お客様の声（レビューアプリ）：見出しとアプリの間を詰める */
+.b-app-reviews .b-section-head {
+  margin-bottom: 0.8rem;
+}
+
 .b-app-reviews__body {
   min-height: 1px;
+}
+
+.b-app-reviews__body > .shopify-app-block:first-child,
+.b-app-reviews__body > div:first-child {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }
 
 /* ---------- メルマガ登録 ---------- */

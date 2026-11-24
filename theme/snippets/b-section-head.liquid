@@ -3,6 +3,7 @@
   - heading / subheading / link_label / link_url
   - tag: 見出しタグ（初期値 h2）
   - align: 'center' で中央寄せ
+  - link_mobile_bottom: true のとき、スマホではリンクを見出しの右に出さない（内容の下に b-more-bottom で出す）
 {%- endcomment -%}
 {%- if heading != blank or link_label != blank -%}
   {%- assign heading_tag = tag | default: 'h2' -%}
@@ -12,7 +13,7 @@
       {%- if subheading != blank -%}<p class="b-subtitle">{{ subheading | escape }}</p>{%- endif -%}
     </div>
     {%- if link_label != blank and link_url != blank -%}
-      <a href="{{ link_url }}" class="b-more">{{ link_label | escape }} →</a>
+      <a href="{{ link_url }}" class="b-more{% if link_mobile_bottom %} b-more--pc{% endif %}">{{ link_label | escape }} →</a>
     {%- endif -%}
   </div>
 {%- endif -%}
