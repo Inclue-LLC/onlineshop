@@ -1061,7 +1061,7 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
 }
 
 .b-stars {
-  --star-color: #e0a63c;
+  --star-color: #8c7663;
   position: relative;
   display: inline-block;
   font-size: 1.3rem;
