@@ -86,6 +86,9 @@
         "slideshow": false,
         "ratio_desktop": "auto",
         "ratio_mobile": "auto"
+      },
+      "store-list": {
+        "more_label": ""
       }
     }
   }
