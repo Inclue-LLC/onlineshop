@@ -66,6 +66,39 @@
       {%- endif -%}
 
       {%- liquid
+        comment
+          優先する受け取り方法（LINE / メール）を先に、大きく表示する
+        endcomment
+        assign has_line = false
+        if section.settings.line_url != blank
+          assign has_line = true
+        endif
+        assign line_first = false
+        if has_line and section.settings.primary != 'email'
+          assign line_first = true
+        endif
+      -%}
+
+      {%- capture line_block -%}
+        {%- if has_line -%}
+          <div class="b-newsletter__line-wrap">
+            <a
+              href="{{ section.settings.line_url }}"
+              class="b-newsletter__line{% unless line_first %} b-newsletter__line--sub{% endunless %}"
+              target="_blank"
+              rel="noopener"
+            >
+              {{- section.settings.line_label | escape -}}
+            </a>
+            {%- if section.settings.line_caption != blank -%}
+              <p class="b-newsletter__caption">{{ section.settings.line_caption | escape }}</p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endcapture -%}
+
+      {%- capture email_block -%}
+      {%- liquid
         assign form_id = 'NewsletterForm-' | append: section.id
         assign return_to = request.path | append: '#newsletter-' | append: section.id
       -%}
@@ -93,7 +126,7 @@
                 aria-invalid="true" aria-describedby="NewsletterError-{{ section.id }}"
               {% endif %}
             >
-            <button type="submit" class="b-btn b-newsletter__button" name="commit">
+            <button type="submit" class="b-btn b-newsletter__button{% if line_first %} b-btn--outline{% endif %}" name="commit">
               {{- section.settings.button_label | escape -}}
             </button>
           </div>
@@ -108,12 +141,21 @@
           {%- endif -%}
         {%- endif -%}
       {%- endform -%}
+      {%- endcapture -%}
 
-      {%- if section.settings.line_url != blank -%}
-        <p class="b-newsletter__or"><span>または</span></p>
-        <a href="{{ section.settings.line_url }}" class="b-newsletter__line" target="_blank" rel="noopener">
-          {{- section.settings.line_label | escape -}}
-        </a>
+      {%- if line_first -%}
+        {{ line_block }}
+        <p class="b-newsletter__or"><span>{{ section.settings.or_label | default: 'または' | escape }}</span></p>
+        {%- if section.settings.email_lead != blank -%}
+          <p class="b-newsletter__caption b-newsletter__caption--lead">{{ section.settings.email_lead | escape }}</p>
+        {%- endif -%}
+        {{ email_block }}
+      {%- else -%}
+        {{ email_block }}
+        {%- if has_line -%}
+          <p class="b-newsletter__or"><span>{{ section.settings.or_label | default: 'または' | escape }}</span></p>
+          {{ line_block }}
+        {%- endif -%}
       {%- endif -%}
 
       {%- if section.settings.note != blank -%}
@@ -150,7 +192,7 @@
       "type": "text",
       "id": "subheading",
       "label": "小見出し",
-      "default": "NEWSLETTER"
+      "default": "LINE / NEWSLETTER"
     },
     {
       "type": "text",
@@ -162,7 +204,7 @@
       "type": "richtext",
       "id": "text",
       "label": "説明文",
-      "default": "<p>メールマガジン・LINE公式アカウントに登録すると、<strong>毎月1日に限定の壁紙</strong>をお届けします。新商品やPOP UPの情報もいち早くお知らせします。</p>"
+      "default": "<p>LINE公式アカウント・メールマガジンに登録すると、<strong>毎月1日に限定の壁紙</strong>をお届けします。新商品やPOP UPの情報もいち早くお知らせします。</p>"
     },
     {
       "type": "checkbox",
@@ -200,6 +242,39 @@
     },
     {
       "type": "header",
+      "content": "受け取り方法"
+    },
+    {
+      "type": "select",
+      "id": "primary",
+      "label": "優先する受け取り方法",
+      "default": "line",
+      "options": [
+        {
+          "value": "line",
+          "label": "LINE公式アカウント（LINEを先に大きく表示）"
+        },
+        {
+          "value": "email",
+          "label": "メールマガジン（メールを先に表示）"
+        }
+      ],
+      "info": "LINE のリンクが未設定の場合はメールのみ表示します。"
+    },
+    {
+      "type": "text",
+      "id": "or_label",
+      "label": "区切りの文字",
+      "default": "または"
+    },
+    {
+      "type": "text",
+      "id": "email_lead",
+      "label": "メール欄の上の補足（LINE優先のとき）",
+      "default": "LINEを使っていない方はメールで受け取れます"
+    },
+    {
+      "type": "header",
       "content": "LINE公式アカウント"
     },
     {
@@ -213,6 +288,12 @@
       "id": "line_label",
       "label": "LINE ボタンの文字",
       "default": "LINEで友だち追加して受け取る"
+    },
+    {
+      "type": "text",
+      "id": "line_caption",
+      "label": "LINE ボタンの下の補足",
+      "default": "友だち追加するだけで、毎月1日に届きます"
     },
     {
       "type": "richtext",
