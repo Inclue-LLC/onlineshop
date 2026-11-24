@@ -220,6 +220,16 @@
         "id": "brand_operator",
         "label": "運営者表記",
         "default": "運営：合同会社インクルー"
+      },
+      {
+        "type": "header",
+        "content": "レビュー（商品カードの星）"
+      },
+      {
+        "type": "html",
+        "id": "review_badge_html",
+        "label": "商品カードの星評価のコード",
+        "info": "レビューアプリ（Ali Reviews など）の「コレクションページ／商品カード用の星評価」の埋め込みコードを貼り付けます。商品IDの部分は {{ product.id }}・{{product.id}}・[product_id] のどれでも、商品ごとのIDに自動で置き換わります。空欄の場合は、Shopify 標準の評価データ（reviews.rating）があれば星を表示します。"
       }
     ]
   },
