@@ -29,7 +29,10 @@
       {%- endcomment -%}
       {{ 'component-card.css' | asset_url | stylesheet_tag }}
       {{ 'component-price.css' | asset_url | stylesheet_tag }}
+      <div class="collection b-product-showcase__collection">
       <ul
+        id="Slider-{{ section.id }}"
+        data-id="{{ section.id }}"
         class="grid product-grid contains-card contains-card--product{% if settings.card_style == 'standard' %} contains-card--standard{% endif %} grid--4-col-desktop grid--2-col-tablet-down b-product-showcase__grid"
         role="list"
       >
@@ -53,6 +56,7 @@
           {%- endfor -%}
         {%- endfor -%}
       </ul>
+      </div>
     {%- else -%}
       <div class="b-grid b-grid--4 b-grid--sp-2">
         {%- if source != blank and source.products_count > 0 -%}
