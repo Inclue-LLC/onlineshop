@@ -2235,3 +2235,12 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
 .b-product-showcase__grid .price {
   font-weight: 700;
 }
+
+/* Ali Reviews の星（商品カード） */
+.b-product-card__arv:empty {
+  display: none;
+}
+
+.b-product-card__arv {
+  margin-top: 0.4rem;
+}

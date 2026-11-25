@@ -164,6 +164,8 @@
                 {{ card_product.title | escape }}
               </a>
             </h3>
+            {%- comment -%} Ali Reviews：商品カードの星評価の差し込み位置（以前の Dawn テーマと同じ） {%- endcomment -%}
+            <div product-id="{{ card_product.id }}" class="arv-collection arv-collection--{{ card_product.id }}"></div>
             <div class="card-information">
               {%- if show_vendor -%}
                 <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>

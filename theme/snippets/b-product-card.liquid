@@ -36,6 +36,10 @@
       <p class="b-product-card__type">{{ product.type | escape }}</p>
     {%- endif -%}
     <p class="b-product-card__title">{{ product.title | default: '[商品名]' | escape }}</p>
+    {%- if show_rating and product.id -%}
+      {%- comment -%} Ali Reviews：星評価の差し込み位置 {%- endcomment -%}
+      <div product-id="{{ product.id }}" class="arv-collection arv-collection--{{ product.id }} b-product-card__arv"></div>
+    {%- endif -%}
     {%- if show_rating and settings.review_badge_html != blank and product.id -%}
       {%- liquid
         comment
