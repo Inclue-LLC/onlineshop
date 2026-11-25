@@ -2221,20 +2221,6 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
   display: none;
 }
 
-/* オンラインショップ：Shopify 標準のカードで表示するとき */
-.b-product-showcase__grid {
-  margin: 0;
-  padding: 0;
-}
-
-.b-product-showcase__grid .card__heading {
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-.b-product-showcase__grid .price {
-  font-weight: 700;
-}
 
 /* Ali Reviews の星（商品カード） */
 .b-product-card__arv:empty {

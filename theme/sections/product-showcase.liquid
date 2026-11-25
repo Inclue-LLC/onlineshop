@@ -22,60 +22,23 @@
       link_label: more_label,
       link_url: more_url
     -%}
-    {%- if section.settings.card_type == 'standard' -%}
-      {%- comment -%}
-        Shopify 標準（Dawn）の商品カード。商品一覧ページと同じ作りなので、
-        レビューアプリ（Ali Reviews など）の星が自動で差し込まれる。
-      {%- endcomment -%}
-      {{ 'component-card.css' | asset_url | stylesheet_tag }}
-      {{ 'component-price.css' | asset_url | stylesheet_tag }}
-      <div class="collection b-product-showcase__collection">
-      <ul
-        id="Slider-{{ section.id }}"
-        data-id="{{ section.id }}"
-        class="grid product-grid contains-card contains-card--product{% if settings.card_style == 'standard' %} contains-card--standard{% endif %} grid--4-col-desktop grid--2-col-tablet-down b-product-showcase__grid"
-        role="list"
-      >
+    <div class="b-grid b-grid--4 b-grid--sp-2">
+      {%- if source != blank and source.products_count > 0 -%}
         {%- for product in source.products limit: product_limit -%}
-          <li class="grid__item">
-            {% render 'card-product',
-              card_product: product,
-              media_aspect_ratio: 'square',
-              show_secondary_image: false,
-              show_vendor: false,
-              show_rating: section.settings.show_rating,
-              skip_styles: true,
-              section_id: section.id,
-              quick_add: 'none',
-              product_view_context: 'collection'
-            %}
-          </li>
-        {%- else -%}
-          {%- for i in (1..4) -%}
-            <li class="grid__item">{% render 'card-product', card_product: blank, skip_styles: true %}</li>
-          {%- endfor -%}
+          {%- render 'b-product-card',
+            product: product,
+            index: forloop.index0,
+            new_tag: section.settings.new_tag,
+            tax_label: section.settings.tax_label,
+            show_rating: section.settings.show_rating
+          -%}
         {%- endfor -%}
-      </ul>
-      </div>
-    {%- else -%}
-      <div class="b-grid b-grid--4 b-grid--sp-2">
-        {%- if source != blank and source.products_count > 0 -%}
-          {%- for product in source.products limit: product_limit -%}
-            {%- render 'b-product-card',
-              product: product,
-              index: forloop.index0,
-              new_tag: section.settings.new_tag,
-              tax_label: section.settings.tax_label,
-              show_rating: section.settings.show_rating
-            -%}
-          {%- endfor -%}
-        {%- else -%}
-          {%- for i in (1..4) -%}
-            {%- render 'b-product-card', product: blank, index: forloop.index0, tax_label: section.settings.tax_label -%}
-          {%- endfor -%}
-        {%- endif -%}
-      </div>
-    {%- endif -%}
+      {%- else -%}
+        {%- for i in (1..4) -%}
+          {%- render 'b-product-card', product: blank, index: forloop.index0, tax_label: section.settings.tax_label -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
   </div>
 </section>
 
@@ -119,23 +82,6 @@
       "default": 4
     },
     {
-      "type": "select",
-      "id": "card_type",
-      "label": "カードのデザイン",
-      "default": "brand",
-      "options": [
-        {
-          "value": "brand",
-          "label": "ブランドのカード（パステル背景・NEWバッジ）"
-        },
-        {
-          "value": "standard",
-          "label": "Shopify 標準のカード（レビューの星が自動で表示される）"
-        }
-      ],
-      "info": "レビューアプリの星を表示したい場合は「Shopify 標準のカード」を選びます。NEW バッジ・価格の後ろの表記はブランドのカードのみです。"
-    },
-    {
       "type": "text",
       "id": "new_tag",
       "label": "NEW バッジを付けるタグ",
@@ -152,7 +98,7 @@
       "id": "show_rating",
       "label": "レビューの星を表示",
       "default": true,
-      "info": "レビューアプリ（Judge.me など）の評価を表示します。レビューが無い商品には表示されません。"
+      "info": "レビューアプリ（Ali Reviews など）の星評価を商品名の下に表示します。レビューが無い商品には表示されません。"
     },
     {
       "type": "text",
