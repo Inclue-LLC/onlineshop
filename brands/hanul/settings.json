@@ -80,7 +80,8 @@
   "templates": {
     "index": {
       "product-showcase": {
-        "show_all": true
+        "show_all": true,
+        "card_type": "standard"
       },
       "hero-slider": {
         "slideshow": false,

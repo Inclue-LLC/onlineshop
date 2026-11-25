@@ -22,23 +22,56 @@
       link_label: more_label,
       link_url: more_url
     -%}
-    <div class="b-grid b-grid--4 b-grid--sp-2">
-      {%- if source != blank and source.products_count > 0 -%}
+    {%- if section.settings.card_type == 'standard' -%}
+      {%- comment -%}
+        Shopify 標準（Dawn）の商品カード。商品一覧ページと同じ作りなので、
+        レビューアプリ（Ali Reviews など）の星が自動で差し込まれる。
+      {%- endcomment -%}
+      {{ 'component-card.css' | asset_url | stylesheet_tag }}
+      {{ 'component-price.css' | asset_url | stylesheet_tag }}
+      <ul
+        class="grid product-grid contains-card contains-card--product{% if settings.card_style == 'standard' %} contains-card--standard{% endif %} grid--4-col-desktop grid--2-col-tablet-down b-product-showcase__grid"
+        role="list"
+      >
         {%- for product in source.products limit: product_limit -%}
-          {%- render 'b-product-card',
-            product: product,
-            index: forloop.index0,
-            new_tag: section.settings.new_tag,
-            tax_label: section.settings.tax_label,
-            show_rating: section.settings.show_rating
-          -%}
+          <li class="grid__item">
+            {% render 'card-product',
+              card_product: product,
+              media_aspect_ratio: 'square',
+              show_secondary_image: false,
+              show_vendor: false,
+              show_rating: section.settings.show_rating,
+              skip_styles: true,
+              section_id: section.id,
+              quick_add: 'none',
+              product_view_context: 'collection'
+            %}
+          </li>
+        {%- else -%}
+          {%- for i in (1..4) -%}
+            <li class="grid__item">{% render 'card-product', card_product: blank, skip_styles: true %}</li>
+          {%- endfor -%}
         {%- endfor -%}
-      {%- else -%}
-        {%- for i in (1..4) -%}
-          {%- render 'b-product-card', product: blank, index: forloop.index0, tax_label: section.settings.tax_label -%}
-        {%- endfor -%}
-      {%- endif -%}
-    </div>
+      </ul>
+    {%- else -%}
+      <div class="b-grid b-grid--4 b-grid--sp-2">
+        {%- if source != blank and source.products_count > 0 -%}
+          {%- for product in source.products limit: product_limit -%}
+            {%- render 'b-product-card',
+              product: product,
+              index: forloop.index0,
+              new_tag: section.settings.new_tag,
+              tax_label: section.settings.tax_label,
+              show_rating: section.settings.show_rating
+            -%}
+          {%- endfor -%}
+        {%- else -%}
+          {%- for i in (1..4) -%}
+            {%- render 'b-product-card', product: blank, index: forloop.index0, tax_label: section.settings.tax_label -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
   </div>
 </section>
 
@@ -47,17 +80,93 @@
   "name": "オンラインショップ",
   "tag": "div",
   "settings": [
-    { "type": "text", "id": "heading", "label": "見出し", "default": "オンラインショップ" },
-    { "type": "text", "id": "subheading", "label": "小見出し", "default": "新着・おすすめアイテム" },
-    { "type": "collection", "id": "collection", "label": "表示するコレクション", "info": "例：新着・おすすめ をまとめたコレクション。未選択の場合はすべての商品" },
-    { "type": "checkbox", "id": "show_all", "label": "コレクションの商品をすべて表示する（最大50件）", "default": false, "info": "オンにすると「すべての商品を見る」リンクは表示されません。商品数が少ないストア向け。" },
-    { "type": "range", "id": "limit", "label": "表示件数（すべて表示しないとき）", "min": 2, "max": 12, "step": 1, "default": 4 },
-    { "type": "text", "id": "new_tag", "label": "NEW バッジを付けるタグ", "default": "NEW" },
-    { "type": "text", "id": "tax_label", "label": "価格の後ろの表記", "default": "（税込）" },
-    { "type": "checkbox", "id": "show_rating", "label": "レビューの星を表示", "default": true, "info": "レビューアプリ（Judge.me など）の評価を表示します。レビューが無い商品には表示されません。" },
-    { "type": "text", "id": "more_label", "label": "右上リンクの文字", "default": "すべての商品を見る" },
-    { "type": "url", "id": "more_url", "label": "右上リンクのリンク先", "info": "未設定の場合はコレクションのページ" }
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "見出し",
+      "default": "オンラインショップ"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "小見出し",
+      "default": "新着・おすすめアイテム"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "表示するコレクション",
+      "info": "例：新着・おすすめ をまとめたコレクション。未選択の場合はすべての商品"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_all",
+      "label": "コレクションの商品をすべて表示する（最大50件）",
+      "default": false,
+      "info": "オンにすると「すべての商品を見る」リンクは表示されません。商品数が少ないストア向け。"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "label": "表示件数（すべて表示しないとき）",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "card_type",
+      "label": "カードのデザイン",
+      "default": "brand",
+      "options": [
+        {
+          "value": "brand",
+          "label": "ブランドのカード（パステル背景・NEWバッジ）"
+        },
+        {
+          "value": "standard",
+          "label": "Shopify 標準のカード（レビューの星が自動で表示される）"
+        }
+      ],
+      "info": "レビューアプリの星を表示したい場合は「Shopify 標準のカード」を選びます。NEW バッジ・価格の後ろの表記はブランドのカードのみです。"
+    },
+    {
+      "type": "text",
+      "id": "new_tag",
+      "label": "NEW バッジを付けるタグ",
+      "default": "NEW"
+    },
+    {
+      "type": "text",
+      "id": "tax_label",
+      "label": "価格の後ろの表記",
+      "default": "（税込）"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "レビューの星を表示",
+      "default": true,
+      "info": "レビューアプリ（Judge.me など）の評価を表示します。レビューが無い商品には表示されません。"
+    },
+    {
+      "type": "text",
+      "id": "more_label",
+      "label": "右上リンクの文字",
+      "default": "すべての商品を見る"
+    },
+    {
+      "type": "url",
+      "id": "more_url",
+      "label": "右上リンクのリンク先",
+      "info": "未設定の場合はコレクションのページ"
+    }
   ],
-  "presets": [{ "name": "オンラインショップ" }]
+  "presets": [
+    {
+      "name": "オンラインショップ"
+    }
+  ]
 }
 {% endschema %}
