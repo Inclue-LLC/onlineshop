@@ -5,12 +5,19 @@
 <section class="b-section b-newsletter" id="newsletter-{{ section.id }}">
   <div class="b-container">
     {%- liquid
+      assign perk_blocks = section.blocks | where: 'type', 'perk'
+      assign has_perks = false
+      if perk_blocks.size > 0
+        assign has_perks = true
+      endif
       assign has_visual = false
-      if section.settings.image != blank or request.design_mode
-        assign has_visual = true
+      if has_perks == false
+        if section.settings.image != blank or request.design_mode
+          assign has_visual = true
+        endif
       endif
     -%}
-    <div class="b-card b-newsletter__box{% if has_visual %} b-newsletter__box--visual{% endif %}">
+    <div class="b-card b-newsletter__box{% if has_visual %} b-newsletter__box--visual{% endif %}{% if has_perks %} b-newsletter__box--perks{% endif %}">
       {%- if section.settings.badge != blank -%}
         <p class="b-newsletter__badge-wrap b-newsletter__badge-wrap--sp"><span class="b-badge b-badge--accent b-newsletter__badge{% if section.settings.heading == blank %} b-newsletter__badge--title{% endif %}">{{ section.settings.badge | escape }}</span></p>
       {%- endif -%}
@@ -55,6 +62,82 @@
         <div class="b-newsletter__text rte">{{ section.settings.text }}</div>
       {%- endif -%}
 
+      {%- if has_perks -%}
+        <ul class="b-newsletter__perks" role="list">
+          {%- for block in perk_blocks -%}
+            {%- assign perk_style = block.settings.style | default: 'phone' -%}
+            <li class="b-newsletter__perk b-newsletter__perk--{{ perk_style }}" {{ block.shopify_attributes }}>
+              <div class="b-newsletter__perk-visual">
+                {%- if perk_style == 'icon' -%}
+                  {%- liquid
+                    assign icon_count = 0
+                    if block.settings.image != blank
+                      assign icon_count = icon_count | plus: 1
+                    endif
+                    if block.settings.image_2 != blank
+                      assign icon_count = icon_count | plus: 1
+                    endif
+                    if block.settings.image_3 != blank
+                      assign icon_count = icon_count | plus: 1
+                    endif
+                  -%}
+                  <div class="b-newsletter__icons b-newsletter__icons--{{ icon_count | at_least: 1 }}">
+                    {%- if icon_count == 0 -%}
+                      <span class="b-newsletter__icon b-newsletter__icon--ph" aria-hidden="true"></span>
+                    {%- endif -%}
+                    {%- for img in (1..3) -%}
+                      {%- liquid
+                        case img
+                          when 1
+                            assign icon_img = block.settings.image
+                          when 2
+                            assign icon_img = block.settings.image_2
+                          when 3
+                            assign icon_img = block.settings.image_3
+                        endcase
+                      -%}
+                      {%- if icon_img != blank -%}
+                        <span class="b-newsletter__icon">
+                          {{- icon_img | image_url: width: 300 | image_tag: loading: 'lazy', widths: '150, 300', sizes: '120px', alt: block.settings.title -}}
+                        </span>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </div>
+                {%- else -%}
+                  <div class="b-newsletter__visual b-newsletter__visual--{{ perk_style }}">
+                    <div class="b-newsletter__frame">
+                      <div class="b-newsletter__screen">
+                        {%- if block.settings.image != blank -%}
+                          {{
+                            block.settings.image
+                            | image_url: width: 500
+                            | image_tag: loading: 'lazy', widths: '250, 375, 500', sizes: '(min-width: 750px) 200px, 35vw', class: 'b-newsletter__image', alt: block.settings.title
+                          }}
+                        {%- else -%}
+                          {%- render 'b-placeholder', label: '見本画像', color: 1 -%}
+                        {%- endif -%}
+                        {%- if block.settings.watermark -%}
+                          <span class="b-newsletter__watermark" aria-hidden="true">SAMPLE</span>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  </div>
+                {%- endif -%}
+              </div>
+              {%- if block.settings.label != blank -%}
+                <p class="b-newsletter__perk-label">{{ block.settings.label | escape }}</p>
+              {%- endif -%}
+              {%- if block.settings.title != blank -%}
+                <h3 class="b-newsletter__perk-title">{{ block.settings.title | escape }}</h3>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="b-newsletter__perk-text">{{ block.settings.text | escape }}</p>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
       {%- if section.settings.show_next_date -%}
         {%- liquid
           comment
@@ -78,7 +161,7 @@
           assign w_index = next_str | date: '%w' | plus: 0
         -%}
         <p class="b-newsletter__next">
-          次回の配信は<strong>{{ n_month }}月{{ d_day }}日（{{ weekdays[w_index] }}）</strong>です
+          {{ section.settings.next_label | default: '次回の配信は' | escape }}<strong>{{ n_month }}月{{ d_day }}日（{{ weekdays[w_index] }}）</strong>です
         </p>
       {%- endif -%}
 
@@ -94,11 +177,16 @@
         if has_line and section.settings.primary != 'email'
           assign line_first = true
         endif
+        assign line_only = false
+        if has_line and section.settings.primary == 'line_only'
+          assign line_only = true
+        endif
       -%}
 
       {%- capture line_block -%}
         {%- if has_line -%}
-          <div class="b-newsletter__line-wrap">
+          <div class="b-newsletter__line-wrap{% if section.settings.qr_image != blank %} b-newsletter__line-wrap--qr{% endif %}">
+            <div class="b-newsletter__line-main">
             <a
               href="{{ section.settings.line_url }}"
               class="b-newsletter__line{% unless line_first %} b-newsletter__line--sub{% endunless %}"
@@ -109,6 +197,15 @@
             </a>
             {%- if section.settings.line_caption != blank -%}
               <p class="b-newsletter__caption">{{ section.settings.line_caption | escape }}</p>
+            {%- endif -%}
+            </div>
+            {%- if section.settings.qr_image != blank -%}
+              <div class="b-newsletter__qr">
+                {{ section.settings.qr_image | image_url: width: 240 | image_tag: loading: 'lazy', width: 120, height: 120, alt: 'LINE友だち追加のQRコード' }}
+                {%- if section.settings.qr_label != blank -%}
+                  <p class="b-newsletter__qr-label">{{ section.settings.qr_label | escape }}</p>
+                {%- endif -%}
+              </div>
             {%- endif -%}
           </div>
         {%- endif -%}
@@ -160,7 +257,9 @@
       {%- endform -%}
       {%- endcapture -%}
 
-      {%- if line_first -%}
+      {%- if line_only -%}
+        {{ line_block }}
+      {%- elsif line_first -%}
         {{ line_block }}
         <p class="b-newsletter__or"><span>{{ section.settings.or_label | default: 'または' | escape }}</span></p>
         {%- if section.settings.email_lead != blank -%}
@@ -259,6 +358,13 @@
       "default": true
     },
     {
+      "type": "text",
+      "id": "next_label",
+      "label": "次回の配信日の前の文字",
+      "default": "次回の配信は",
+      "info": "特典が複数あるときは「次回の壁紙の配信は」のように、何の配信日かを書くと分かりやすくなります。"
+    },
+    {
       "type": "range",
       "id": "delivery_day",
       "label": "毎月の配信日",
@@ -296,6 +402,10 @@
       "label": "優先する受け取り方法",
       "default": "line",
       "options": [
+        {
+          "value": "line_only",
+          "label": "LINE公式アカウントのみ（メール欄を表示しない）"
+        },
         {
           "value": "line",
           "label": "LINE公式アカウント（LINEを先に大きく表示）"
@@ -342,6 +452,18 @@
       "default": "友だち追加するだけで、毎月1日に届きます"
     },
     {
+      "type": "image_picker",
+      "id": "qr_image",
+      "label": "友だち追加の QR コード（PC のみ表示）",
+      "info": "LINE Official Account Manager の「友だち追加ガイド」からダウンロードできます。スマホでは表示しません。"
+    },
+    {
+      "type": "text",
+      "id": "qr_label",
+      "label": "QR コードの下の文字",
+      "default": "スマホで読み取って追加"
+    },
+    {
       "type": "richtext",
       "id": "note",
       "label": "注記",
@@ -355,6 +477,37 @@
       "info": "顧客一覧でメルマガ登録者を絞り込むときに使えます。"
     }
   ],
+  "blocks": [
+    {
+      "type": "perk",
+      "name": "特典",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "特典を追加すると、左の見本画像の代わりに特典を横に並べて表示します。"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "見本画像の見せ方",
+          "default": "phone",
+          "options": [
+            { "value": "phone", "label": "スマホの画面風（壁紙など）" },
+            { "value": "icon", "label": "丸いアイコン（アイコン画像など・最大3つ並べる）" },
+            { "value": "plain", "label": "角丸の画像のみ" }
+          ]
+        },
+        { "type": "image_picker", "id": "image", "label": "見本画像" },
+        { "type": "image_picker", "id": "image_2", "label": "見本画像 2（丸いアイコンのみ）" },
+        { "type": "image_picker", "id": "image_3", "label": "見本画像 3（丸いアイコンのみ）" },
+        { "type": "checkbox", "id": "watermark", "label": "「SAMPLE」の透かしを入れる（丸いアイコン以外）", "default": false },
+        { "type": "text", "id": "label", "label": "ラベル（受け取り方など）", "default": "毎月1日に配信" },
+        { "type": "text", "id": "title", "label": "特典の名前", "default": "限定壁紙" },
+        { "type": "text", "id": "text", "label": "説明" }
+      ]
+    }
+  ],
+  "max_blocks": 4,
   "presets": [
     {
       "name": "メルマガ・LINE登録"

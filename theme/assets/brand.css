@@ -2209,6 +2209,205 @@ a.b-news-row:hover .b-news-row__thumb--crop img {
   font-size: 1.7rem;
 }
 
+/* LINE登録：特典を並べる（特典ブロックがあるとき） */
+.b-newsletter__box--perks {
+  max-width: 88rem;
+}
+
+.b-newsletter__box--perks .b-newsletter__title {
+  margin-bottom: 2rem;
+  word-break: auto-phrase;
+  text-wrap: balance;
+}
+
+.b-newsletter__perks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin: 0 0 2.4rem;
+  padding: 0;
+  list-style: none;
+}
+
+@media screen and (min-width: 750px) {
+  .b-newsletter__perks {
+    gap: 2.4rem;
+    max-width: 64rem;
+    margin: 0 auto 3.2rem;
+  }
+}
+
+.b-newsletter__perk {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1.2rem 1.8rem;
+  border-radius: var(--brand-radius);
+  background: var(--brand-accent-soft);
+  text-align: center;
+}
+
+@media screen and (min-width: 750px) {
+  .b-newsletter__perk {
+    padding: 2.8rem 2rem 2.4rem;
+  }
+}
+
+.b-newsletter__perk-visual {
+  flex: 1 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+  margin-bottom: 1.4rem;
+}
+
+.b-newsletter__perk .b-newsletter__visual {
+  width: 62%;
+  max-width: 16rem;
+}
+
+.b-newsletter__perk .b-newsletter__visual--phone .b-newsletter__frame {
+  padding: 0.5rem;
+  border-radius: 2rem;
+}
+
+.b-newsletter__perk .b-newsletter__visual--phone .b-newsletter__screen {
+  border-radius: 1.6rem;
+}
+
+.b-newsletter__perk .b-newsletter__visual--phone .b-newsletter__frame::before {
+  top: 0.9rem;
+  height: 0.9rem;
+}
+
+.b-newsletter__perk .b-newsletter__watermark {
+  font-size: 2rem;
+}
+
+/* 丸いアイコン（推し色アイコンなど） */
+/* スマホ枠の見本と高さを揃える（幅62%×16/9 ≒ 幅の1.1倍、上限 16rem×16/9） */
+.b-newsletter__perk--icon .b-newsletter__perk-visual {
+  aspect-ratio: 10 / 11;
+  max-height: 28.4rem;
+}
+
+.b-newsletter__icons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.b-newsletter__icon {
+  display: block;
+  width: 72%;
+  max-width: 14rem;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  background: var(--brand-pastel-1);
+  box-shadow: 0 0.6rem 1.6rem rgba(var(--color-foreground), 0.12);
+}
+
+.b-newsletter__icons--2 .b-newsletter__icon,
+.b-newsletter__icons--3 .b-newsletter__icon {
+  width: 46%;
+}
+
+.b-newsletter__icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.b-newsletter__perk-label {
+  display: inline-block;
+  margin: 0 0 0.6rem;
+  padding: 0.3rem 1rem;
+  border-radius: 99px;
+  background: rgb(var(--color-background));
+  color: var(--b-accent);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.b-newsletter__perk-title {
+  margin: 0;
+  font-size: 1.6rem;
+  line-height: 1.4;
+  color: var(--b-text);
+}
+
+@media screen and (min-width: 750px) {
+  .b-newsletter__perk-label {
+    font-size: 1.2rem;
+  }
+  .b-newsletter__perk-title {
+    font-size: 1.8rem;
+  }
+}
+
+.b-newsletter__perk-text {
+  margin: 0.6rem 0 0;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--b-muted);
+}
+
+@media screen and (min-width: 750px) {
+  .b-newsletter__perk-text {
+    font-size: 1.3rem;
+  }
+}
+
+.b-newsletter__box--perks .b-newsletter__next {
+  margin: -0.8rem 0 2rem;
+}
+
+/* LINE ボタン＋QR コード（QR は PC のみ） */
+.b-newsletter__line-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.b-newsletter__qr {
+  display: none;
+}
+
+@media screen and (min-width: 750px) {
+  .b-newsletter__line-wrap--qr {
+    display: flex;
+    align-items: center;
+    gap: 2.4rem;
+    max-width: 60rem;
+  }
+  .b-newsletter__qr {
+    display: block;
+    flex: 0 0 auto;
+    text-align: center;
+  }
+  .b-newsletter__qr img {
+    display: block;
+    width: 10.4rem;
+    height: 10.4rem;
+    padding: 0.6rem;
+    border: 1px solid var(--brand-line);
+    border-radius: 1.2rem;
+    background: #ffffff;
+  }
+  .b-newsletter__qr-label {
+    margin: 0.6rem 0 0;
+    font-size: 1.1rem;
+    color: var(--b-muted);
+  }
+}
+
 /* 商品カード：レビューアプリの星評価 */
 .b-product-card__app-rating {
   min-height: 1.6rem;
